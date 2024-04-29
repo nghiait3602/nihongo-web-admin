@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import baiHocApi from "../Api/baiHocApi";
 import { useSelector } from "react-redux";
@@ -7,7 +6,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function QLBH_CT() {
-  let { id } = useParams();
   const auth = useSelector(authSelector);
   const [baiHoc, setBaiHoc] = useState([]);
 
@@ -19,36 +17,6 @@ function QLBH_CT() {
   const [newKhoaHoc, setNewKhoaHoc] = useState("");
   const [newHinhAnh, setNewHinhAnh] = useState("");
   const [newCreateAt, setNewCreateAt] = useState("");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await baiHocApi.BaiHocHandler(
-          `/${id}`,
-          null,
-          "get",
-          auth.token
-        );
-        if (response.status === "success") {
-          const responseData = response.data.data;
-          console.log(response);
-          setBaiHoc(responseData);
-          // Set các giá trị ban đầu cho state khi fetch dữ liệu thành công
-          setNewName(responseData.tenBaiHoc);
-          setNewMucTieu(responseData.mucTieu);
-          setNewNoiDung(responseData.noiDung);
-          setNewKhoaHoc(
-            responseData.khoaHoc && responseData.khoaHoc.tenKhoahoc
-          );
-          setNewHinhAnh(responseData.hinhAnh);
-          setNewCreateAt(responseData.createAt);
-        }
-      } catch (error) {
-        console.error("Loi fetch data: ", error);
-      }
-    };
-    fetchData();
-  }, [isUpdating]);
 
   const updateData = async () => {
     try {
@@ -98,7 +66,7 @@ function QLBH_CT() {
         <div className="container-fluid">
           <div className="row mb-2">
             <div className="col-sm-6">
-              <h1>Chi tiết bài học</h1>
+              <h1>Tạo bài học</h1>
             </div>
             <div className="col-sm-6">
               <ol className="breadcrumb float-sm-right">
