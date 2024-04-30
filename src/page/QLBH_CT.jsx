@@ -180,7 +180,11 @@ function QLBH_CT() {
                   </tr>
                   <tr>
                     <td colSpan="5" className="text-center">
-                      <img src={baiHoc.hinhAnh} alt="Hình ảnh" />
+                      <img
+                        src={baiHoc.hinhAnh}
+                        alt="Hình ảnh"
+                        style={{ maxWidth: "100%", height: "auto" }}
+                      />
                     </td>
                   </tr>
                 </tbody>
@@ -215,7 +219,9 @@ function QLBH_CT() {
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
-                    {selectedText ? selectedText : baiHoc.khoaHoc && baiHoc.khoaHoc.tenKhoahoc}
+                    {selectedText
+                      ? selectedText
+                      : baiHoc.khoaHoc && baiHoc.khoaHoc.tenKhoahoc}
                   </button>
                   <div
                     className="dropdown-menu"
