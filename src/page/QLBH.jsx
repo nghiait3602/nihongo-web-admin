@@ -13,18 +13,39 @@ function QLBH() {
   const [baiHoc, setBaiHoc] = useState([]);
   const [reloadPage, setReloadPage] = useState(false);
 
+  const [selectedCourses, setSelectedCourses] = useState(["0"]);
+  const [selectedText, setSelectedText] = useState("Tất cả khóa học");
+
+  const chonKhoaHoc = (e) => {
+    const selectedIds = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedCourses(selectedIds);
+    const selectedText = Array.from(
+      e.target.selectedOptions,
+      (option) => option.text
+    );
+    setSelectedText(selectedText.join(", "));
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        let url = "/";
+        if (selectedCourses.includes("0")) {
+          url = "/";
+        } else {
+          url += `?khoaHoc=${selectedCourses.join(",")}`;
+        }
         const response = await baiHocApi.BaiHocHandler(
-          "/",
+          url,
           null,
           "get",
           auth.token
         );
         if (response.status === "success") {
           const responseData = response.data.data;
-          console.log(response);
           setBaiHoc(responseData);
         }
       } catch (error) {
@@ -32,7 +53,7 @@ function QLBH() {
       }
     };
     fetchData();
-  }, [reloadPage]);
+  }, [reloadPage, selectedCourses]);
 
   const deleteData = async (id) => {
     try {
@@ -88,21 +109,49 @@ function QLBH() {
         </div>
         <div className="card">
           <div className="card-header">
-            <h3 className="card-title">Tất cả bài học</h3>
-            <div className="card-tools">
-              
-              <Link
-                to={`/qlbh/tao-moi`}
-                className="btn btn-warning btn-sm"
+            <Link
+              to={`/qlbh/tao-moi`}
+              className="btn btn-warning btn-sm"
+              style={{ marginRight: "5px" }}
+            >
+              <i
+                className="fas fa-plus-circle"
                 style={{ marginRight: "5px" }}
-              >
-                <i
-                  className="fas fa-plus-circle"
-                  style={{ marginRight: "5px" }}
-                ></i>
-                Thêm bài học
-              </Link>
+              ></i>
+              Thêm bài học
+            </Link>
+            <button
+              className="btn btn-secondary dropdown-toggle btn-sm"
+              type="button"
+              id="dropdownMenuButton"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              {selectedText}
+            </button>
+            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <select multiple className="form-control" onChange={chonKhoaHoc}>
+                <option value="0">Tất cả khóa học</option>
+                <option value="65ec6c83e897e10f2734fd06">
+                  Khóa học HokkaiDo - N5
+                </option>
+                <option value="65ec6d8ce897e10f2734fd08">
+                  Khóa học KyoTo - N4
+                </option>
+                <option value="65ec6dabe897e10f2734fd0a">
+                  Khóa học OsaKa - N3
+                </option>
+                <option value="65ec6dc3e897e10f2734fd0c">
+                  Khóa học ToKyo - N2
+                </option>
+                <option value="65ec6e25e897e10f2734fd0f">
+                  Khóa học Nagasaki - N1
+                </option>
+              </select>
+            </div>
 
+            <div className="card-tools">
               <button
                 type="button"
                 className="btn btn-tool"
