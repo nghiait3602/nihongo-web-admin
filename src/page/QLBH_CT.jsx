@@ -16,9 +16,23 @@ function QLBH_CT() {
   const [newName, setNewName] = useState("");
   const [newMucTieu, setNewMucTieu] = useState("");
   const [newNoiDung, setNewNoiDung] = useState("");
-  const [newKhoaHoc, setNewKhoaHoc] = useState("");
   const [newHinhAnh, setNewHinhAnh] = useState("");
   const [newCreateAt, setNewCreateAt] = useState("");
+  const [selectedCourses, setSelectedCourses] = useState([]);
+  const [selectedText, setSelectedText] = useState();
+
+  const chonKhoaHoc = (e) => {
+    const selectedIds = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedCourses(selectedIds);
+    const selectedText = Array.from(
+      e.target.selectedOptions,
+      (option) => option.text
+    );
+    setSelectedText(selectedText.join(", "));
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,9 +51,6 @@ function QLBH_CT() {
           setNewName(responseData.tenBaiHoc);
           setNewMucTieu(responseData.mucTieu);
           setNewNoiDung(responseData.noiDung);
-          setNewKhoaHoc(
-            responseData.khoaHoc && responseData.khoaHoc.tenKhoahoc
-          );
           setNewHinhAnh(responseData.hinhAnh);
           setNewCreateAt(responseData.createAt);
         }
@@ -56,6 +67,7 @@ function QLBH_CT() {
       formData.append("tenBaiHoc", newName);
       formData.append("mucTieu", newMucTieu);
       formData.append("noiDung", newNoiDung);
+      formData.append("khoaHoc", selectedCourses);
       if (typeof newHinhAnh === "object") {
         formData.append("image", newHinhAnh);
       } else {
@@ -195,14 +207,42 @@ function QLBH_CT() {
                     value={newNoiDung}
                     onChange={(e) => setNewNoiDung(e.target.value)}
                   />
-                  <input
-                    type="text"
-                    className="form-control mb-2"
-                    placeholder="Thuộc khóa học mới"
-                    value={newKhoaHoc}
-                    onChange={(e) => setNewKhoaHoc(e.target.value)}
-                    readOnly
-                  />
+                  <button
+                    className="btn btn-success dropdown-toggle mb-2"
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    {selectedText ? selectedText : baiHoc.khoaHoc && baiHoc.khoaHoc.tenKhoahoc}
+                  </button>
+                  <div
+                    className="dropdown-menu"
+                    aria-labelledby="dropdownMenuButton"
+                  >
+                    <select
+                      multiple
+                      className="form-control"
+                      onChange={chonKhoaHoc}
+                    >
+                      <option value="65ec6c83e897e10f2734fd06">
+                        Khóa học HokkaiDo - N5
+                      </option>
+                      <option value="65ec6d8ce897e10f2734fd08">
+                        Khóa học KyoTo - N4
+                      </option>
+                      <option value="65ec6dabe897e10f2734fd0a">
+                        Khóa học OsaKa - N3
+                      </option>
+                      <option value="65ec6dc3e897e10f2734fd0c">
+                        Khóa học ToKyo - N2
+                      </option>
+                      <option value="65ec6e25e897e10f2734fd0f">
+                        Khóa học Nagasaki - N1
+                      </option>
+                    </select>
+                  </div>
                   <input
                     type="text"
                     className="form-control mb-2"
