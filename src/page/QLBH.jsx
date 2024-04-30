@@ -36,7 +36,7 @@ function QLBH() {
 
   const deleteData = async (id) => {
     try {
-      await baiHocApi.BaiHocHandler(`/${id}`, null, "delete", auth.token);    
+      await baiHocApi.BaiHocHandler(`/${id}`, null, "delete", auth.token);
       setReloadPage(!reloadPage);
     } catch (error) {
       console.error("Lỗi khi xóa bài học: ", error);
@@ -90,6 +90,19 @@ function QLBH() {
           <div className="card-header">
             <h3 className="card-title">Tất cả bài học</h3>
             <div className="card-tools">
+              
+              <Link
+                to={`/qlbh/tao-moi`}
+                className="btn btn-warning btn-sm"
+                style={{ marginRight: "5px" }}
+              >
+                <i
+                  className="fas fa-plus-circle"
+                  style={{ marginRight: "5px" }}
+                ></i>
+                Thêm bài học
+              </Link>
+
               <button
                 type="button"
                 className="btn btn-tool"
