@@ -26,7 +26,7 @@ function QLBH() {
       e.target.selectedOptions,
       (option) => option.text
     );
-    setSelectedText(selectedText.join(", "));
+    setSelectedText(selectedText);
   };
 
   useEffect(() => {
@@ -36,7 +36,7 @@ function QLBH() {
         if (selectedCourses.includes("0")) {
           url = "/";
         } else {
-          url += `?khoaHoc=${selectedCourses.join(",")}`;
+          url += `?khoaHoc=${selectedCourses}`;
         }
         const response = await baiHocApi.BaiHocHandler(
           url,

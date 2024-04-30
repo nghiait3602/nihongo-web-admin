@@ -31,7 +31,7 @@ function QLBH_CT() {
       e.target.selectedOptions,
       (option) => option.text
     );
-    setSelectedText(selectedText.join(", "));
+    setSelectedText(selectedText);
   };
 
   useEffect(() => {

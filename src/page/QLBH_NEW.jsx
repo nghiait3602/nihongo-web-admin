@@ -26,7 +26,7 @@ function QLBH_NEW() {
       e.target.selectedOptions,
       (option) => option.text
     );
-    setSelectedText(selectedText.join(", "));
+    setSelectedText(selectedText);
   };
 
   const createData = async () => {
