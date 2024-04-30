@@ -1,15 +1,15 @@
-import { useDispatch } from 'react-redux';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { removeAuth } from '../redux/reducers/authReducer';
+import { useDispatch } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
+import { removeAuth } from "../redux/reducers/authReducer";
 
 function Sidebar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   function testLogout(e) {
     e.preventDefault();
-    localStorage.removeItem('auth');
+    localStorage.removeItem("auth");
     dispatch(removeAuth());
-    navigate('/login');
+    navigate("/login");
   }
   return (
     <>
@@ -60,19 +60,19 @@ function Sidebar() {
               </li>
               <li className="nav-item">
                 <NavLink to="/qlbh" className="nav-link">
-                  <i className="nav-icon far fa-calendar-alt" />
+                  <i className="nav-icon fas fa-book"></i>
                   <p>Quản lý bài học</p>
                 </NavLink>
               </li>
               <li className="nav-item">
                 <NavLink to="/qltv" className="nav-link">
-                  <i className="nav-icon far fa-calendar-alt" />
+                  <i className="nav-icon fas fa-pen" />
                   <p>Quản lý từ vựng</p>
                 </NavLink>
               </li>
               <li className="nav-item">
                 <NavLink to="/qlkanji" className="nav-link">
-                  <i className="nav-icon far fa-calendar-alt" />
+                  <i className="nav-icon fas fa-font" />
                   <p>Quản lý kanji</p>
                 </NavLink>
               </li>
