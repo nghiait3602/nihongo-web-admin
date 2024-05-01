@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import Sidebar from './components/Sidebar';
 import Home from './page/Home';
 import QLTV from './page/QLTV';
+import QLTV_CT from './page/QLTV_CT';
 import QLNP from './page/QLNP';
 import QLKanji from './page/QLKanji';
 import QLKH from './page/QLKH';
@@ -54,6 +55,7 @@ function HomeRouter() {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/qltv" element={<QLTV />} />
+          <Route path="/qltv/chi-tiet-tu-vung/:id" element={<QLTV_CT />} />
           <Route path="/qlnp" element={<QLNP />} />
           <Route path="/qlkanji" element={<QLKanji />} />
           <Route path="/qlkh" element={<QLKH />} />
