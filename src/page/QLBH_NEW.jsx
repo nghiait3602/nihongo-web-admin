@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import baiHocApi from "../Api/baiHocApi";
+import khoaHocApi from "../Api/khoaHocApi";
 import { useSelector } from "react-redux";
 import { authSelector } from "../redux/reducers/authReducer";
 import { ToastContainer, toast } from "react-toastify";
@@ -7,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 function QLBH_NEW() {
   const auth = useSelector(authSelector);
+  const [khoaHoc, setKhoaHoc] = useState([]);
 
   const [newName, setNewName] = useState("");
   const [newMucTieu, setNewMucTieu] = useState("");
@@ -15,6 +17,7 @@ function QLBH_NEW() {
 
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedText, setSelectedText] = useState("Chọn khóa học");
+  const [isLoading, setIsLoading] = useState(false);
 
   const chonKhoaHoc = (e) => {
     const selectedIds = Array.from(
@@ -29,8 +32,29 @@ function QLBH_NEW() {
     setSelectedText(selectedText);
   };
 
+  useEffect(() => {
+    const fetchKHData = async () => {
+      try {
+        const response = await khoaHocApi.KhoaHocHandler(
+          "/",
+          null,
+          "get",
+          auth.token
+        );
+        if (response.status === "success") {
+          const responseData = response.data.data;
+          setKhoaHoc(responseData);
+        }
+      } catch (error) {
+        console.error("Loi fetch data: ", error);
+      }
+    };
+    fetchKHData();
+  }, []);
+
   const createData = async () => {
     try {
+      setIsLoading(true);
       const formData = new FormData();
       formData.append("tenBaiHoc", newName);
       formData.append("mucTieu", newMucTieu);
@@ -56,6 +80,7 @@ function QLBH_NEW() {
           position: "top-center",
           autoClose: 2000,
         });
+        setIsLoading(false);
         setTimeout(() => {
           window.location.href = "/qlbh";
         }, 2000);
@@ -79,6 +104,26 @@ function QLBH_NEW() {
   return (
     <>
       <ToastContainer />
+      {isLoading && (
+        <div
+          style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "9999",
+          }}
+        >
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Creating...</span>
+          </div>
+        </div>
+      )}
       <div className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
@@ -137,21 +182,11 @@ function QLBH_NEW() {
                     className="form-control"
                     onChange={chonKhoaHoc}
                   >
-                    <option value="65ec6c83e897e10f2734fd06">
-                      Khóa học HokkaiDo - N5
-                    </option>
-                    <option value="65ec6d8ce897e10f2734fd08">
-                      Khóa học KyoTo - N4
-                    </option>
-                    <option value="65ec6dabe897e10f2734fd0a">
-                      Khóa học OsaKa - N3
-                    </option>
-                    <option value="65ec6dc3e897e10f2734fd0c">
-                      Khóa học ToKyo - N2
-                    </option>
-                    <option value="65ec6e25e897e10f2734fd0f">
-                      Khóa học Nagasaki - N1
-                    </option>
+                    {khoaHoc.map((course) => (
+                      <option key={course._id} value={course._id}>
+                        {course.tenKhoahoc}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <input
