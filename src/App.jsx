@@ -11,6 +11,7 @@ import Sidebar from './components/Sidebar';
 import Home from './page/Home';
 import QLTV from './page/QLTV';
 import QLTV_CT from './page/QLTV_CT';
+import QLTV_NEW from './page/QLTV_NEW';
 import QLNP from './page/QLNP';
 import QLKanji from './page/QLKanji';
 import QLKH from './page/QLKH';
@@ -56,6 +57,7 @@ function HomeRouter() {
           <Route path="/home" element={<Home />} />
           <Route path="/qltv" element={<QLTV />} />
           <Route path="/qltv/chi-tiet-tu-vung/:id" element={<QLTV_CT />} />
+          <Route path="/qltv/tao-moi" element={<QLTV_NEW />} />
           <Route path="/qlnp" element={<QLNP />} />
           <Route path="/qlkanji" element={<QLKanji />} />
           <Route path="/qlkh" element={<QLKH />} />
