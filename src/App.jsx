@@ -12,6 +12,7 @@ import Home from './page/Home';
 import QLTV from './page/QLTV';
 import QLNP from './page/QLNP';
 import QLKanji from './page/QLKanji';
+import QLKanji_CT from './page/QLKanji_CT';
 import QLKH from './page/QLKH';
 import QLBT from './page/QLBT';
 import QLBH from './page/QLBH';
@@ -56,6 +57,7 @@ function HomeRouter() {
           <Route path="/qltv" element={<QLTV />} />
           <Route path="/qlnp" element={<QLNP />} />
           <Route path="/qlkanji" element={<QLKanji />} />
+          <Route path="/qlkanji/chi-tiet-kanji/:id" element={<QLKanji_CT />} />
           <Route path="/qlkh" element={<QLKH />} />
           <Route path="/qlbt" element={<QLBT />} />
           <Route path="/qlbh" element={<QLBH />} />
