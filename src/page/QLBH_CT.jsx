@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import baiHocApi from "../Api/baiHocApi";
+import khoaHocApi from "../Api/khoaHocApi";
 import { useSelector } from "react-redux";
 import { authSelector } from "../redux/reducers/authReducer";
 import { ToastContainer, toast } from "react-toastify";
@@ -10,14 +11,17 @@ function QLBH_CT() {
   let { id } = useParams();
   const auth = useSelector(authSelector);
   const [baiHoc, setBaiHoc] = useState([]);
+  const [khoaHoc, setKhoaHoc] = useState([]);
 
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [newName, setNewName] = useState("");
   const [newMucTieu, setNewMucTieu] = useState("");
   const [newNoiDung, setNewNoiDung] = useState("");
   const [newHinhAnh, setNewHinhAnh] = useState("");
   const [newCreateAt, setNewCreateAt] = useState("");
+
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedText, setSelectedText] = useState();
 
@@ -35,6 +39,26 @@ function QLBH_CT() {
   };
 
   useEffect(() => {
+    const fetchKHData = async () => {
+      try {
+        const response = await khoaHocApi.KhoaHocHandler(
+          "/",
+          null,
+          "get",
+          auth.token
+        );
+        if (response.status === "success") {
+          const responseData = response.data.data;
+          setKhoaHoc(responseData);
+        }
+      } catch (error) {
+        console.error("Loi fetch data: ", error);
+      }
+    };
+    fetchKHData();
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await baiHocApi.BaiHocHandler(
@@ -48,6 +72,7 @@ function QLBH_CT() {
           console.log(response);
           setBaiHoc(responseData);
           // Set các giá trị ban đầu cho state khi fetch dữ liệu thành công
+          setSelectedCourses(responseData.khoaHoc && responseData.khoaHoc.id);
           setNewName(responseData.tenBaiHoc);
           setNewMucTieu(responseData.mucTieu);
           setNewNoiDung(responseData.noiDung);
@@ -63,6 +88,7 @@ function QLBH_CT() {
 
   const updateData = async () => {
     try {
+      setIsLoading(true);
       const formData = new FormData();
       formData.append("tenBaiHoc", newName);
       formData.append("mucTieu", newMucTieu);
@@ -90,6 +116,7 @@ function QLBH_CT() {
           autoClose: 2000,
         });
         setIsUpdating(false);
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật dữ liệu: ", error);
@@ -106,6 +133,26 @@ function QLBH_CT() {
   return (
     <>
       <ToastContainer />
+      {isLoading && (
+        <div
+          style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "9999",
+          }}
+        >
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Updating...</span>
+          </div>
+        </div>
+      )}
       <div className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
@@ -123,7 +170,10 @@ function QLBH_CT() {
           </div>
           <div className="card">
             <div className="card-header">
-              <h3 className="card-title" style={{ color: "#15d442" }}>
+              <h3
+                className="card-title"
+                style={{ color: "#15d442", fontWeight: "bold" }}
+              >
                 Bài học ID: {id}
               </h3>
               <div className="card-tools">
@@ -232,21 +282,11 @@ function QLBH_CT() {
                       className="form-control"
                       onChange={chonKhoaHoc}
                     >
-                      <option value="65ec6c83e897e10f2734fd06">
-                        Khóa học HokkaiDo - N5
-                      </option>
-                      <option value="65ec6d8ce897e10f2734fd08">
-                        Khóa học KyoTo - N4
-                      </option>
-                      <option value="65ec6dabe897e10f2734fd0a">
-                        Khóa học OsaKa - N3
-                      </option>
-                      <option value="65ec6dc3e897e10f2734fd0c">
-                        Khóa học ToKyo - N2
-                      </option>
-                      <option value="65ec6e25e897e10f2734fd0f">
-                        Khóa học Nagasaki - N1
-                      </option>
+                      {khoaHoc.map((course) => (
+                        <option key={course._id} value={course._id}>
+                          {course.tenKhoahoc}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <input

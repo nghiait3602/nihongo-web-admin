@@ -2,6 +2,9 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import tuVungApi from "../Api/tuVungApi";
+import baiHocApi from "../Api/baiHocApi";
+import khoaHocApi from "../Api/khoaHocApi";
+
 import { useSelector } from "react-redux";
 import { authSelector } from "../redux/reducers/authReducer";
 import { ToastContainer, toast } from "react-toastify";
@@ -11,7 +14,10 @@ function QLTV_CT() {
   let { id } = useParams();
   const auth = useSelector(authSelector);
   const [tuVung, setTuVung] = useState([]);
+  const [baiHoc, setBaiHoc] = useState([]);
+  const [khoaHoc, setKhoaHoc] = useState([]);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [newTV, setNewTV] = useState("");
   const [newPhienAm, setNewPhienAm] = useState("");
@@ -22,6 +28,60 @@ function QLTV_CT() {
   const [newDNVD, setNewDNVD] = useState("");
   const [newHinhAnh, setNewHinhAnh] = useState("");
   const [newCreateAt, setNewCreateAt] = useState("");
+
+  const [selectedLesson, setSelectedLesson] = useState();
+  const [selectedCourse, setSelectedCourse] = useState();
+
+  const handleCourseChange = (event) => {
+    const courseId = event.target.value;
+    setSelectedCourse(courseId);
+    setSelectedLesson(null);
+  };
+
+  const handleLessonChange = (event) => {
+    const lessonId = event.target.value;
+    setSelectedLesson(lessonId);
+  };
+
+  useEffect(() => {
+    const fetchKHData = async () => {
+      try {
+        const response = await khoaHocApi.KhoaHocHandler(
+          "/",
+          null,
+          "get",
+          auth.token
+        );
+        if (response.status === "success") {
+          const responseData = response.data.data;
+          setKhoaHoc(responseData);
+        }
+      } catch (error) {
+        console.error("Loi fetch data: ", error);
+      }
+    };
+    fetchKHData();
+  }, []);
+
+  useEffect(() => {
+    const fetchBHData = async () => {
+      try {
+        const response = await baiHocApi.BaiHocHandler(
+          "/",
+          null,
+          "get",
+          auth.token
+        );
+        if (response.status === "success") {
+          const responseData = response.data.data;
+          setBaiHoc(responseData);
+        }
+      } catch (error) {
+        console.error("Loi fetch data: ", error);
+      }
+    };
+    fetchBHData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,6 +95,7 @@ function QLTV_CT() {
         if (response.status === "success") {
           const responseData = response.data.data;
           setTuVung(responseData);
+          setSelectedLesson(responseData.baiHoc.id);
           setNewTV(responseData.tu);
           setNewPhienAm(responseData.phienAm);
           setNewDinhNghia(responseData.dinhNghia);
@@ -54,7 +115,9 @@ function QLTV_CT() {
 
   const updateData = async () => {
     try {
+      setIsLoading(true);
       const formData = new FormData();
+      formData.append("baiHoc", selectedLesson);
       formData.append("tu", newTV);
       formData.append("phienAm", newPhienAm);
       formData.append("dinhNghia", newDinhNghia);
@@ -84,6 +147,7 @@ function QLTV_CT() {
           autoClose: 2000,
         });
         setIsUpdating(false);
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật dữ liệu: ", error);
@@ -100,6 +164,26 @@ function QLTV_CT() {
   return (
     <>
       <ToastContainer />
+      {isLoading && (
+        <div
+          style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "9999",
+          }}
+        >
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Updating...</span>
+          </div>
+        </div>
+      )}
       <div className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
@@ -117,7 +201,10 @@ function QLTV_CT() {
           </div>
           <div className="card">
             <div className="card-header">
-              <h3 className="card-title" style={{ color: "#15d442" }}>
+              <h3
+                className="card-title"
+                style={{ color: "#15d442", fontWeight: "bold" }}
+              >
                 Từ vựng ID: {id}
               </h3>
               <div className="card-tools">
@@ -148,6 +235,19 @@ function QLTV_CT() {
                   </button>
                 )}
               </div>
+            </div>
+            <div
+              className="card-header"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <a className="card-title" style={{ fontWeight: "bold" }}>
+                Thuộc bài học: {tuVung.baiHoc && tuVung.baiHoc.tenBaiHoc} - ID:{" "}
+                {tuVung.baiHoc && tuVung.baiHoc.id}
+              </a>
             </div>
             <div className="card-body p-0">
               <table className="table table-striped projects">
@@ -191,6 +291,60 @@ function QLTV_CT() {
               </table>
               {isUpdating && (
                 <div className="card-body">
+                  <button
+                    className="btn btn-success dropdown-toggle mb-2"
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    {selectedCourse
+                      ? khoaHoc.find((course) => course._id === selectedCourse)
+                          .tenKhoahoc
+                      : baiHoc.find((lesson) => lesson._id === tuVung.baiHoc.id)
+                          .tenBaiHoc}
+                  </button>
+                  <div
+                    className="dropdown-menu"
+                    aria-labelledby="dropdownMenuButton"
+                  >
+                    <select
+                      multiple
+                      className="form-control mb-2"
+                      value={selectedCourse}
+                      onChange={handleCourseChange}
+                    >
+                      {/* Render lựa chon dựa theo khóa hoc */}
+                      {khoaHoc.map((course) => (
+                        <option key={course._id} value={course._id}>
+                          {course.tenKhoahoc}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  {selectedCourse && (
+                    <div>
+                      <select
+                        className="form-control mb-2"
+                        value={selectedLesson}
+                        onChange={handleLessonChange}
+                      >
+                        <option value="">-- Chọn bài học --</option>
+                        {/* Render bài học theo lựa chọn */}
+                        {baiHoc
+                          .filter(
+                            (lesson) => lesson.khoaHoc._id === selectedCourse
+                          )
+                          .map((lesson) => (
+                            <option key={lesson._id} value={lesson._id}>
+                              {lesson.tenBaiHoc}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  )}
+
                   <input
                     type="text"
                     className="form-control mb-2"
