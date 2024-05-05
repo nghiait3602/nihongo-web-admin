@@ -7,11 +7,15 @@ import { Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 import baiTapApi from "../Api/baitapApi";
+import baiHocApi from "../Api/baiHocApi";
+import khoaHocApi from "../Api/khoaHocApi";
 
 function QLBT_CT() {
   let { id } = useParams();
   const auth = useSelector(authSelector);
   const [baiTap, setBaiTap] = useState([]);
+  const [baiHoc, setBaiHoc] = useState([]);
+  const [khoaHoc, setKhoaHoc] = useState([]);
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,6 +26,61 @@ function QLBT_CT() {
   const [diem, setDiem] = useState("");
   const [thuocBaiHoc, setThuocBaiHoc] = useState("");
   const [newCreateAt, setNewCreateAt] = useState("");
+  const diemOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  const [selectedLesson, setSelectedLesson] = useState();
+  const [selectedCourse, setSelectedCourse] = useState();
+
+  const handleCourseChange = (event) => {
+    const courseId = event.target.value;
+    setSelectedCourse(courseId);
+    setSelectedLesson(null);
+  };
+
+  const handleLessonChange = (event) => {
+    const lessonId = event.target.value;
+    setSelectedLesson(lessonId);
+  };
+
+  useEffect(() => {
+    const fetchKHData = async () => {
+      try {
+        const response = await khoaHocApi.KhoaHocHandler(
+          "/",
+          null,
+          "get",
+          auth.token
+        );
+        if (response.status === "success") {
+          const responseData = response.data.data;
+          setKhoaHoc(responseData);
+        }
+      } catch (error) {
+        console.error("Loi fetch data: ", error);
+      }
+    };
+    fetchKHData();
+  }, []);
+
+  useEffect(() => {
+    const fetchBHData = async () => {
+      try {
+        const response = await baiHocApi.BaiHocHandler(
+          "/",
+          null,
+          "get",
+          auth.token
+        );
+        if (response.status === "success") {
+          const responseData = response.data.data;
+          setBaiHoc(responseData);
+        }
+      } catch (error) {
+        console.error("Loi fetch data: ", error);
+      }
+    };
+    fetchBHData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,6 +100,7 @@ function QLBT_CT() {
           setDiem(responseData.diem);
           setThuocBaiHoc(responseData.baiHoc);
           setNewCreateAt(responseData.createAt);
+          setSelectedLesson(responseData.baiHoc);
         }
       } catch (error) {
         console.error("Loi fetch data: ", error);
@@ -72,7 +132,7 @@ function QLBT_CT() {
         cauTraLoi: cauTraLoiArray,
         cauTraLoiDung,
         diem,
-        baiHoc: thuocBaiHoc,
+        baiHoc: selectedLesson,
         createAt: new Date().toISOString(),
       };
       const response = await baiTapApi.BaiTapHandler(
@@ -197,19 +257,77 @@ function QLBT_CT() {
                 id="inputStatus"
                 className="form-control custom-select"
                 readOnly={!isUpdating}
+                value={diem}
+                onChange={(e) => setDiem(e.target.value)}
               >
                 <option disabled>Chọn điểm</option>
-                <option selected>{diem}</option>
+                {diemOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="form-group">
               <label htmlFor="inputClientCompany">Thuộc Bài Học</label>
+              <br></br>
+              <button
+                className="btn btn-success dropdown-toggle mb-2"
+                type="button"
+                id="dropdownMenuButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                {selectedCourse
+                  ? khoaHoc.find((course) => course._id === selectedCourse)
+                      ?.tenKhoahoc
+                  : baiHoc.find((lesson) => lesson._id === thuocBaiHoc)
+                      ?.tenBaiHoc}
+              </button>
+              <div
+                className="dropdown-menu"
+                aria-labelledby="dropdownMenuButton"
+              >
+                <select
+                  multiple
+                  className="form-control mb-2"
+                  value={selectedCourse}
+                  onChange={handleCourseChange}
+                >
+                  {/* Render lựa chon dựa theo khóa hoc */}
+                  {khoaHoc.map((course) => (
+                    <option key={course._id} value={course._id}>
+                      {course.tenKhoahoc}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {selectedCourse && (
+                <div>
+                  <select
+                    className="form-control mb-2"
+                    value={selectedLesson}
+                    onChange={handleLessonChange}
+                  >
+                    <option value="">-- Chọn bài học --</option>
+                    {/* Render bài học theo lựa chọn */}
+                    {baiHoc
+                      .filter((lesson) => lesson.khoaHoc._id === selectedCourse)
+                      .map((lesson) => (
+                        <option key={lesson._id} value={lesson._id}>
+                          {lesson.tenBaiHoc}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
               <input
                 type="text"
                 id="inputClientCompany"
                 className="form-control"
                 value={thuocBaiHoc}
-                readOnly={!isUpdating}
+                readOnly
               />
             </div>
             <div className="form-group">
@@ -223,34 +341,39 @@ function QLBT_CT() {
                 readOnly
               />
             </div>
+            {isUpdating && (
+              <>
+                <button className="btn btn-primary" onClick={updateData}>
+                  <i
+                    className="fas fa-upload"
+                    style={{ marginRight: "5px" }}
+                  ></i>
+                  Cập nhật
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger ml-2"
+                  onClick={() => setIsUpdating(false)}
+                >
+                  <i
+                    className="fas fa-times"
+                    style={{ marginRight: "5px" }}
+                  ></i>
+                  Hủy
+                </button>
+              </>
+            )}
+            {!isUpdating && (
+              <button
+                type="button"
+                className="btn btn-info"
+                onClick={() => setIsUpdating(true)}
+              >
+                <i className="fas fa-pencil-alt"></i> Sửa
+              </button>
+            )}
           </div>
         </div>
-        {isUpdating && (
-          <>
-            <button className="btn btn-primary" onClick={updateData}>
-              <i className="fas fa-upload" style={{ marginRight: "5px" }}></i>
-              Cập nhật
-            </button>
-            <button
-              type="button"
-              className="btn btn-danger ml-2"
-              onClick={() => setIsUpdating(false)}
-            >
-              <i className="fas fa-times" style={{ marginRight: "5px" }}></i>
-              Hủy
-            </button>
-          </>
-        )}
-        {!isUpdating && (
-          <button
-            type="button"
-            className="btn btn-info ml-2"
-            onClick={() => setIsUpdating(true)}
-          >
-            <i className="fas fa-pencil-alt" style={{ marginRight: "5px" }}></i>
-            Sửa
-          </button>
-        )}
       </div>
     </>
   );

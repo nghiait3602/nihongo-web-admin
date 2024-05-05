@@ -84,6 +84,37 @@ function QLBT() {
           </div>
         </div>
         <div className="card card-solid">
+          <div className="card-header">
+            <Link
+              to={`/qlbt/tao-moi`}
+              className="btn btn-warning btn-sm"
+              style={{ marginRight: "5px" }}
+            >
+              <i
+                className="fas fa-plus-circle"
+                style={{ marginRight: "5px" }}
+              ></i>
+              Thêm bài tập
+            </Link>
+            <div className="card-tools">
+              <button
+                type="button"
+                className="btn btn-tool"
+                data-card-widget="collapse"
+                title="Collapse"
+              >
+                <i className="fas fa-minus" />
+              </button>
+              <button
+                type="button"
+                className="btn btn-tool"
+                data-card-widget="remove"
+                title="Remove"
+              >
+                <i className="fas fa-times" />
+              </button>
+            </div>
+          </div>
           <div className="card-body pb-0">
             <div className="row">
               {baiTap.map((item, index) => (

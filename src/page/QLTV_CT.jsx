@@ -301,9 +301,9 @@ function QLTV_CT() {
                   >
                     {selectedCourse
                       ? khoaHoc.find((course) => course._id === selectedCourse)
-                          .tenKhoahoc
+                          ?.tenKhoahoc
                       : baiHoc.find((lesson) => lesson._id === tuVung.baiHoc.id)
-                          .tenBaiHoc}
+                          ?.tenBaiHoc}
                   </button>
                   <div
                     className="dropdown-menu"
