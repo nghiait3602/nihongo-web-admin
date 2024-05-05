@@ -39,7 +39,7 @@ function QLBT_CT() {
           setCauTraLoi(responseData.cauTraLoi);
           setCauTraLoiDung(responseData.cauTraLoiDung);
           setDiem(responseData.diem);
-          setThuocBaiHoc(responseData.baiHoc)
+          setThuocBaiHoc(responseData.baiHoc);
           setNewCreateAt(responseData.createAt);
         }
       } catch (error) {
@@ -49,9 +49,75 @@ function QLBT_CT() {
     fetchData();
   }, [isUpdating]);
 
+  const updateData = async () => {
+    try {
+      setIsLoading(true);
+      let cauTraLoiArray = [];
+      if (cauTraLoi.includes(",")) {
+        if (cauTraLoi.split(",").length === 4) {
+          cauTraLoiArray = cauTraLoi.split(",").map((item) => item.trim());
+        } else {
+          setIsLoading(false);
+          toast.warning("Các đáp án phải có đúng 4 câu!", {
+            position: "top-center",
+            autoClose: 2000,
+          });
+          return;
+        }
+      } else {
+        cauTraLoiArray = [...cauTraLoi];
+      }
+      const reqBody = {
+        cauHoi,
+        cauTraLoi: cauTraLoiArray,
+        cauTraLoiDung,
+        diem,
+        baiHoc: thuocBaiHoc,
+        createAt: new Date().toISOString(),
+      };
+      const response = await baiTapApi.BaiTapHandler(
+        `/${id}`,
+        reqBody,
+        "patch",
+        auth.token
+      );
+      console.log(response);
+      if (response.status === "success") {
+        toast.success("Cập nhật thành công!", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+        setIsUpdating(false);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("Loi fetch data: ", error);
+    }
+  };
+
   return (
     <>
       <ToastContainer />
+      {isLoading && (
+        <div
+          style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "9999",
+          }}
+        >
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Updating...</span>
+          </div>
+        </div>
+      )}
       <div className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
@@ -90,26 +156,48 @@ function QLBT_CT() {
                 type="text"
                 id="inputName"
                 className="form-control"
-                defaultValue={cauHoi}
+                value={cauHoi}
+                onChange={(e) => setCauHoi(e.target.value)}
+                readOnly={!isUpdating}
               />
             </div>
             <div className="form-group">
               <label htmlFor="inputDescription">
-                Các Đáp Án
-                <b style={{ fontStyle: "italic", opacity: "0.7" }}>
-                  (4 câu - cách nhau bằng dấu phẩy)
+                Các Đáp Án Lựa Chọn
+                <b
+                  style={{ fontStyle: "italic", opacity: "0.7", color: "red" }}
+                >
+                  {" "}
+                  *4 câu - cách nhau bằng dấu phẩy
                 </b>
               </label>
               <textarea
                 id="inputDescription"
                 className="form-control"
                 rows={4}
-                defaultValue={cauTraLoi}
+                onChange={(e) => setCauTraLoi(e.target.value)}
+                value={cauTraLoi}
+                readOnly={!isUpdating}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="inputName">Đáp Án Đúng</label>
+              <input
+                type="text"
+                id="inputName"
+                className="form-control"
+                onChange={(e) => setCauTraLoiDung(e.target.value)}
+                value={cauTraLoiDung}
+                readOnly={!isUpdating}
               />
             </div>
             <div className="form-group">
               <label htmlFor="inputStatus">Điểm</label>
-              <select id="inputStatus" className="form-control custom-select">
+              <select
+                id="inputStatus"
+                className="form-control custom-select"
+                readOnly={!isUpdating}
+              >
                 <option disabled>Chọn điểm</option>
                 <option selected>{diem}</option>
               </select>
@@ -120,7 +208,8 @@ function QLBT_CT() {
                 type="text"
                 id="inputClientCompany"
                 className="form-control"
-                defaultValue={thuocBaiHoc}
+                value={thuocBaiHoc}
+                readOnly={!isUpdating}
               />
             </div>
             <div className="form-group">
@@ -129,11 +218,39 @@ function QLBT_CT() {
                 type="text"
                 id="inputProjectLeader"
                 className="form-control"
-                defaultValue={newCreateAt}
+                onChange={(e) => setNewCreateAt(e.target.value)}
+                value={newCreateAt}
+                readOnly
               />
             </div>
           </div>
         </div>
+        {isUpdating && (
+          <>
+            <button className="btn btn-primary" onClick={updateData}>
+              <i className="fas fa-upload" style={{ marginRight: "5px" }}></i>
+              Cập nhật
+            </button>
+            <button
+              type="button"
+              className="btn btn-danger ml-2"
+              onClick={() => setIsUpdating(false)}
+            >
+              <i className="fas fa-times" style={{ marginRight: "5px" }}></i>
+              Hủy
+            </button>
+          </>
+        )}
+        {!isUpdating && (
+          <button
+            type="button"
+            className="btn btn-info ml-2"
+            onClick={() => setIsUpdating(true)}
+          >
+            <i className="fas fa-pencil-alt" style={{ marginRight: "5px" }}></i>
+            Sửa
+          </button>
+        )}
       </div>
     </>
   );
