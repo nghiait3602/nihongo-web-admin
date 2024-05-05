@@ -119,7 +119,9 @@ function QLKanji_CT() {
   
     const updateData = async () => {
       try {
+        setIsLoading(true);
         const formData = new FormData();
+        formData.append("baiHoc", selectedLesson);
         formData.append("hanTu", newHanTu);
         formData.append("hanViet", newHanViet);
         formData.append("kunyomi", newKunyomi);
@@ -150,6 +152,7 @@ function QLKanji_CT() {
             autoClose: 2000,
           });
           setIsUpdating(false);
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("Lỗi khi cập nhật dữ liệu: ", error);
@@ -290,6 +293,154 @@ function QLKanji_CT() {
                     </tr>
                   </tbody>
                 </table>
+                {isUpdating && (
+                <div className="card-body">
+                  <button
+                    className="btn btn-success dropdown-toggle mb-2"
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    {selectedCourse
+                      ? khoaHoc.find((course) => course._id === selectedCourse)
+                          ?.tenKhoahoc
+                      : baiHoc.find((lesson) => lesson._id === kanji.baiHoc.id)
+                          ?.tenBaiHoc}
+                  </button>
+                  <div
+                    className="dropdown-menu"
+                    aria-labelledby="dropdownMenuButton"
+                  >
+                    <select
+                      multiple
+                      className="form-control mb-2"
+                      value={selectedCourse}
+                      onChange={handleCourseChange}
+                    >
+                      {/* Render lựa chon dựa theo khóa hoc */}
+                      {khoaHoc.map((course) => (
+                        <option key={course._id} value={course._id}>
+                          {course.tenKhoahoc}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  {selectedCourse && (
+                    <div>
+                      <select
+                        className="form-control mb-2"
+                        value={selectedLesson}
+                        onChange={handleLessonChange}
+                      >
+                        <option value="">-- Chọn bài học --</option>
+                        {/* Render bài học theo lựa chọn */}
+                        {baiHoc
+                          .filter(
+                            (lesson) => lesson.khoaHoc._id === selectedCourse
+                          )
+                          .map((lesson) => (
+                            <option key={lesson._id} value={lesson._id}>
+                              {lesson.tenBaiHoc}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  )}
+
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Hán tự mới"
+                    value={newHanTu}
+                    onChange={(e) => setNewHanTu(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Hán viet mới"
+                    value={newHanViet}
+                    onChange={(e) => setNewHanViet(e.target.value)}
+                  />
+                  <input
+                    className="form-control mb-2"
+                    placeholder="Âm kunyomi mới"
+                    value={newKunyomi}
+                    onChange={(e) => setNewKunyomi(e.target.value)}
+                  />
+                  <textarea
+                    className="form-control mb-2"
+                    placeholder="Âm onyomi mới"
+                    value={newOnyomi}
+                    onChange={(e) => setNewOnyomi(e.target.value)}
+                  />
+                  <input
+                    className="form-control mb-2"
+                    placeholder="Số nét mới"
+                    value={newSoNet}
+                    onChange={(e) => setNewSoNet(e.target.value)}
+                  />
+                  <textarea
+                    className="form-control mb-2"
+                    placeholder="Bộ mới"
+                    value={newBo}
+                    onChange={(e) => setNewBo(e.target.value)}
+                  />
+                  <textarea
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Nghĩa mới"
+                    value={newNghia}
+                    onChange={(e) => setNewNghia(e.target.value)}
+                  />
+                  <textarea
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Ví dụ mới"
+                    value={newViDu}
+                    onChange={(e) => setNewViDu(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Hình ảnh cách viết mới"
+                    value={newHinhAnhCachViet}
+                    onChange={(e) => setNewHinhAnhCachViet(e.target.value)}
+                  />
+                  {newHinhAnhCachViet && (
+                    <img
+                      src={
+                        typeof newHinhAnhCachViet === "object"
+                          ? URL.createObjectURL(newHinhAnhCachViet)
+                          : newHinhAnhCachViet
+                      }
+                      alt="Hình ảnh cách viết"
+                      className="img-thumbnail mb-2"
+                      style={{ maxHeight: "200px" }}
+                    />
+                  )}
+                  <input
+                    type="file"
+                    className="form-control-file mb-2"
+                    onChange={handleImageChange}
+                  />
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Ngày tạo mới"
+                    value={newCreateAt}
+                    readOnly
+                  />
+                  <button className="btn btn-primary" onClick={updateData}>
+                    <i
+                      className="fas fa-upload"
+                      style={{ marginRight: "5px" }}
+                    ></i>
+                    Cập nhật
+                  </button>
+                </div>
+              )}
               </div>
             </div>
           </div>
@@ -299,4 +450,3 @@ function QLKanji_CT() {
   }
   
   export default QLKanji_CT;
-  
