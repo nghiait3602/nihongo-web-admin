@@ -1,29 +1,23 @@
-import { useState, useEffect } from "react";
-
-import tuVungApi from "../Api/tuVungApi";
-import baiHocApi from "../Api/baiHocApi";
-import khoaHocApi from "../Api/khoaHocApi";
-
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { authSelector } from "../redux/reducers/authReducer";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function QLTV_NEW() {
+import baiTapApi from "../Api/baitapApi";
+import baiHocApi from "../Api/baiHocApi";
+import khoaHocApi from "../Api/khoaHocApi";
+
+function QLBT_NEW() {
   const auth = useSelector(authSelector);
-
-  const [baiHoc, setBaiHoc] = useState([]);
-  const [khoaHoc, setKhoaHoc] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [cauHoi, setCauHoi] = useState("");
+  const [cauTraLoi, setCauTraLoi] = useState("");
+  const [cauTraLoiDung, setCauTraLoiDung] = useState("");
+  const [diem, setDiem] = useState("1");
 
-  const [newTV, setNewTV] = useState("");
-  const [newPhienAm, setNewPhienAm] = useState("");
-  const [newDinhNghia, setNewDinhNghia] = useState("");
-  const [newLoaiTu, setNewLoaiTu] = useState("");
-  const [newChuDe, setNewChuDe] = useState("");
-  const [newVD, setNewVD] = useState("");
-  const [newDNVD, setNewDNVD] = useState("");
-  const [newHinhAnh, setNewHinhAnh] = useState("");
+  const [khoaHoc, setKhoaHoc] = useState([]);
+  const [baiHoc, setBaiHoc] = useState([]);
 
   const [selectedLesson, setSelectedLesson] = useState();
   const [selectedCourse, setSelectedCourse] = useState();
@@ -79,55 +73,49 @@ function QLTV_NEW() {
     fetchBHData();
   }, []);
 
-  const createData = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
       setIsLoading(true);
-      const formData = new FormData();
-      formData.append("baiHoc", selectedLesson);
-      formData.append("tu", newTV);
-      formData.append("phienAm", newPhienAm);
-      formData.append("dinhNghia", newDinhNghia);
-      formData.append("loaiTu", newLoaiTu);
-      formData.append("chuDe", newChuDe);
-      formData.append("viDu", newVD);
-      formData.append("dichNghiaVD", newDNVD);
-      if (typeof newHinhAnh === "object") {
-        formData.append("image", newHinhAnh);
-      } else {
-        // Nếu newHinhAnh là đường dẫn
-        formData.append("hinhAnh", newHinhAnh);
+      if (cauTraLoi.split(",").length !== 4) {
+        setIsLoading(false);
+        toast.warning("Các đáp án phải có đúng 4 câu!", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+        return;
       }
-      const response = await tuVungApi.TuVungHandler(
-        `/`,
-        formData,
+      const reqBody = {
+        cauHoi,
+        cauTraLoi: cauTraLoi.split(",").map((item) => item.trim()),
+        cauTraLoiDung,
+        diem,
+        baiHoc: selectedLesson
+      };
+      const response = await baiTapApi.BaiTapHandler(
+        "/",
+        reqBody,
         "post",
         auth.token
       );
       console.log(response);
       if (response.status === "success") {
-        toast.success("Tạo từ vựng thành công!", {
+        toast.success("Tạo mới bài tập thành công!", {
           position: "top-center",
           autoClose: 2000,
         });
         setIsLoading(false);
         setTimeout(() => {
-          window.location.href = "/qltv";
+          window.location.href = "/qlbt";
         }, 2000);
       }
     } catch (error) {
       setIsLoading(false);
       console.error("Lỗi dữ liệu: ", error);
-      toast.error(`Tạo từ vựng thất bại!\nVui lòng kiểm tra lại thông tin.`, {
+      toast.error(`Tạo bài tập thất bại!\nVui lòng kiểm tra lại thông tin.`, {
         position: "top-center",
         autoClose: 2000,
       });
-    }
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]; // Lấy ra file ảnh từ sự kiện
-    if (file) {
-      setNewHinhAnh(file);
     }
   };
 
@@ -158,20 +146,90 @@ function QLTV_NEW() {
         <div className="container-fluid">
           <div className="row mb-2">
             <div className="col-sm-6">
-              <h1>Tạo từ vựng</h1>
+              <h1>Tạo bài tập</h1>
             </div>
             <div className="col-sm-6">
               <ol className="breadcrumb float-sm-right">
                 <li className="breadcrumb-item">
-                  <a href="/qltv">Tất cả từ vựng</a>
+                  <a href="/qlbt">Tất cả bài tập</a>
                 </li>
-                <li className="breadcrumb-item active">Tạo từ vựng</li>
+                <li className="breadcrumb-item active">Tạo bài tập</li>
               </ol>
             </div>
           </div>
-          <div className="card">
-            <div className="card-body p-0">
-              <div className="card-body">
+        </div>
+
+        <div className="card card-primary">
+          <div className="card-header">
+            <h3 className="card-title">Thông tin bài tập mới</h3>
+          </div>
+          <div className="card-body">
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="inputName">Câu Hỏi</label>
+                <input
+                  type="text"
+                  id="inputName"
+                  className="form-control"
+                  value={cauHoi}
+                  onChange={(e) => setCauHoi(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="inputDescription">
+                  Các Đáp Án Lựa Chọn
+                  <b
+                    style={{
+                      fontStyle: "italic",
+                      opacity: "0.7",
+                      color: "red",
+                    }}
+                  >
+                    {" "}
+                    *4 câu - cách nhau bằng dấu phẩy
+                  </b>
+                </label>
+                <textarea
+                  id="inputDescription"
+                  className="form-control"
+                  rows={4}
+                  onChange={(e) => setCauTraLoi(e.target.value)}
+                  value={cauTraLoi}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="inputName">Đáp Án Đúng</label>
+                <input
+                  type="text"
+                  id="inputName"
+                  className="form-control"
+                  onChange={(e) => setCauTraLoiDung(e.target.value)}
+                  value={cauTraLoiDung}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="inputStatus">Điểm</label>
+                <select
+                  id="inputStatus"
+                  className="form-control custom-select"
+                  value={diem}
+                  onChange={(e) => setDiem(e.target.value)}
+                  required
+                >
+                  <option disabled>Chọn điểm</option>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="inputClientCompany">Thuộc Bài Học</label>
+                <br></br>
                 <button
                   className="btn btn-success dropdown-toggle mb-2"
                   type="button"
@@ -224,85 +282,12 @@ function QLTV_NEW() {
                     </select>
                   </div>
                 )}
-
-                <input
-                  type="text"
-                  className="form-control mb-2"
-                  placeholder="Từ vựng mới"
-                  value={newTV}
-                  onChange={(e) => setNewTV(e.target.value)}
-                />
-                <input
-                  type="text"
-                  className="form-control mb-2"
-                  placeholder="Phiên âm mới"
-                  value={newPhienAm}
-                  onChange={(e) => setNewPhienAm(e.target.value)}
-                />
-                <input
-                  className="form-control mb-2"
-                  placeholder="Định nghĩa mới"
-                  value={newDinhNghia}
-                  onChange={(e) => setNewDinhNghia(e.target.value)}
-                />
-                <textarea
-                  className="form-control mb-2"
-                  placeholder="Loại từ mới"
-                  value={newLoaiTu}
-                  onChange={(e) => setNewLoaiTu(e.target.value)}
-                />
-                <input
-                  className="form-control mb-2"
-                  placeholder="Chủ đề mới"
-                  value={newChuDe}
-                  onChange={(e) => setNewChuDe(e.target.value)}
-                />
-                <textarea
-                  className="form-control mb-2"
-                  placeholder="Ví dụ mới"
-                  value={newVD}
-                  onChange={(e) => setNewVD(e.target.value)}
-                />
-                <textarea
-                  type="text"
-                  className="form-control mb-2"
-                  placeholder="Dịch nghĩa ví dụ mới"
-                  value={newDNVD}
-                  onChange={(e) => setNewDNVD(e.target.value)}
-                />
-                <input
-                  type="text"
-                  className="form-control mb-2"
-                  placeholder="Hình ảnh mới"
-                  value={newHinhAnh}
-                  onChange={(e) => setNewHinhAnh(e.target.value)}
-                />
-                {newHinhAnh && (
-                  <img
-                    src={
-                      typeof newHinhAnh === "object"
-                        ? URL.createObjectURL(newHinhAnh)
-                        : newHinhAnh
-                    }
-                    alt="Hình ảnh"
-                    className="img-thumbnail mb-2"
-                    style={{ maxHeight: "200px" }}
-                  />
-                )}
-                <input
-                  type="file"
-                  className="form-control-file mb-2"
-                  onChange={handleImageChange}
-                />
-                <button className="btn btn-primary" onClick={createData}>
-                  <i
-                    className="fas fa-upload"
-                    style={{ marginRight: "5px" }}
-                  ></i>
-                  Tạo từ vựng
-                </button>
               </div>
-            </div>
+              <button type="submit" className="btn btn-primary">
+                <i className="fas fa-upload" style={{ marginRight: "5px" }}></i>
+                Tạo bài tập
+              </button>
+            </form>
           </div>
         </div>
       </div>
@@ -310,4 +295,4 @@ function QLTV_NEW() {
   );
 }
 
-export default QLTV_NEW;
+export default QLBT_NEW;

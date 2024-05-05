@@ -35,7 +35,7 @@ function QLTV() {
 
   const deleteData = async (id) => {
     try {
-      await tuVungApi.TuVungHandler(`/${id}`, null, "delete", auth.token);      
+      await tuVungApi.TuVungHandler(`/${id}`, null, "delete", auth.token);
       setReloadPage(!reloadPage);
     } catch (error) {
       console.error("Lỗi khi xóa bài học: ", error);
@@ -86,6 +86,17 @@ function QLTV() {
         </div>
         <div className="card">
           <div className="card-header">
+            <Link
+              to={`/qltv/tao-moi`}
+              className="btn btn-warning btn-sm"
+              style={{ marginRight: "5px" }}
+            >
+              <i
+                className="fas fa-plus-circle"
+                style={{ marginRight: "5px" }}
+              ></i>
+              Thêm từ vựng
+            </Link>
             <div className="card-tools">
               <button
                 type="button"
