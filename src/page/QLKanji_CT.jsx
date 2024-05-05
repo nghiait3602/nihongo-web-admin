@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 function QLKanji_CT() {
     let { id } = useParams();
     const auth = useSelector(authSelector);
+    
     const [kanji, setKanji] = useState([]);
     const [baiHoc, setBaiHoc] = useState([]);
     const [khoaHoc, setKhoaHoc] = useState([]);
@@ -98,7 +99,7 @@ function QLKanji_CT() {
             const responseData = response.data.data;
             console.log(response);
             setKanji(responseData);
-            // Set các giá trị ban đầu cho state khi fetch dữ liệu thành công
+            setSelectedLesson(responseData.baiHoc.id);
             setNewHanTu(responseData.hanTu);
             setNewHanViet(responseData.hanViet);
             setNewKunyomi(responseData.kunyomi);
@@ -130,7 +131,7 @@ function QLKanji_CT() {
         formData.append("bo", newBo);
         formData.append("nghia", newNghia);
         formData.append("viDu", newViDu);
-        if (typeof newHinhAnh === "object") {
+        if (typeof newHinhAnhCachViet === "object") {
           formData.append("image", newHinhAnhCachViet);
         } else {
           // Nếu newHinhAnh là đường dẫn

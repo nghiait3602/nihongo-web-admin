@@ -86,6 +86,17 @@ function QLKanji() {
         </div>
         <div className="card">
           <div className="card-header">
+            <Link
+              to={`/qlkanji/tao-moi`}
+              className="btn btn-warning btn-sm"
+              style={{ marginRight: "5px" }}
+            >
+              <i
+                className="fas fa-plus-circle"
+                style={{ marginRight: "5px" }}
+              ></i>
+              Thêm kanji
+            </Link>
             <div className="card-tools">
               <button
                 type="button"
@@ -153,7 +164,7 @@ function QLKanji() {
 
                       <a
                         className="btn btn-danger btn-sm"
-                        onClick={() => xacNhanDel(item.id)}
+                        onClick={() => xacNhanDel(item._id)}
                       >
                         <i
                           className="fas fa-trash"
