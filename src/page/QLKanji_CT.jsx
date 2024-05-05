@@ -1,6 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+
 import kanjiApi from "../Api/kanjiApi";
+import baiHocApi from "../Api/baiHocApi";
+import khoaHocApi from "../Api/khoaHocApi";
+
 import { useSelector } from "react-redux";
 import { authSelector } from "../redux/reducers/authReducer";
 import { ToastContainer, toast } from "react-toastify";
@@ -10,8 +14,11 @@ function QLKanji_CT() {
     let { id } = useParams();
     const auth = useSelector(authSelector);
     const [kanji, setKanji] = useState([]);
-  
+    const [baiHoc, setBaiHoc] = useState([]);
+    const [khoaHoc, setKhoaHoc] = useState([]);
+
     const [isUpdating, setIsUpdating] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
   
     const [newHanTu, setNewHanTu] = useState("");
     const [newHanViet, setNewHanViet] = useState("");
@@ -23,7 +30,60 @@ function QLKanji_CT() {
     const [newViDu, setNewViDu] = useState("");
     const [newHinhAnhCachViet, setNewHinhAnhCachViet] = useState("");
     const [newCreateAt, setNewCreateAt] = useState("");
-    const [selectedText, setSelectedText] = useState();
+
+    const [selectedLesson, setSelectedLesson] = useState();
+    const [selectedCourse, setSelectedCourse] = useState();
+
+    const handleCourseChange = (event) => {
+      const courseId = event.target.value;
+      setSelectedCourse(courseId);
+      setSelectedLesson(null);
+    };
+
+    const handleLessonChange = (event) => {
+      const lessonId = event.target.value;
+      setSelectedLesson(lessonId);
+    };
+
+    useEffect(() => {
+      const fetchKHData = async () => {
+        try {
+          const response = await khoaHocApi.KhoaHocHandler(
+            "/",
+            null,
+            "get",
+            auth.token
+          );
+          if (response.status === "success") {
+            const responseData = response.data.data;
+            setKhoaHoc(responseData);
+          }
+        } catch (error) {
+          console.error("Loi fetch data: ", error);
+        }
+      };
+      fetchKHData();
+    }, []);
+
+    useEffect(() => {
+      const fetchBHData = async () => {
+        try {
+          const response = await baiHocApi.BaiHocHandler(
+            "/",
+            null,
+            "get",
+            auth.token
+          );
+          if (response.status === "success") {
+            const responseData = response.data.data;
+            setBaiHoc(responseData);
+          }
+        } catch (error) {
+          console.error("Loi fetch data: ", error);
+        }
+      };
+      fetchBHData();
+    }, []);
   
     useEffect(() => {
       const fetchData = async () => {
@@ -106,6 +166,26 @@ function QLKanji_CT() {
     return (
       <>
         <ToastContainer />
+        {isLoading && (
+        <div
+          style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "9999",
+          }}
+        >
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Updating...</span>
+          </div>
+        </div>
+      )}
         <div className="content-header">
           <div className="container-fluid">
             <div className="row mb-2">
@@ -115,16 +195,16 @@ function QLKanji_CT() {
               <div className="col-sm-6">
                 <ol className="breadcrumb float-sm-right">
                   <li className="breadcrumb-item">
-                    <a href="/qlbh">Tất cả kanji</a>
+                    <a href="/qlkanji">Tất cả kanji</a>
                   </li>
-                  <li className="breadcrumb-item active">Chi tiết bài học</li>
+                  <li className="breadcrumb-item active">Chi tiết kanji</li>
                 </ol>
               </div>
             </div>
             <div className="card">
               <div className="card-header">
                 <h3 className="card-title" style={{ color: "#15d442" }}>
-                  Bài học ID: {id}
+                  Kanji ID: {id}
                 </h3>
                 <div className="card-tools">
                   {isUpdating && (
@@ -155,6 +235,19 @@ function QLKanji_CT() {
                   )}
                 </div>
               </div>
+              <div
+              className="card-header"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <a className="card-title" style={{ fontWeight: "bold" }}>
+                Thuộc bài học: {kanji.baiHoc && kanji.baiHoc.tenBaiHoc} - ID:{" "}
+                {kanji.baiHoc && kanji.baiHoc.id}
+              </a>
+            </div>
               <div className="card-body p-0">
                 <table className="table table-striped projects">
                   <thead>
