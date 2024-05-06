@@ -38,7 +38,7 @@ function QLTV() {
       await tuVungApi.TuVungHandler(`/${id}`, null, "delete", auth.token);
       setReloadPage(!reloadPage);
     } catch (error) {
-      console.error("Lỗi khi xóa bài học: ", error);
+      console.error("Lỗi khi xóa từ vựng: ", error);
       setReloadPage(!reloadPage);
     }
   };
