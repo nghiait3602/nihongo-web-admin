@@ -66,7 +66,7 @@ function Sidebar() {
               </li>
               <li className="nav-item">
                 <NavLink to="/qltv" className="nav-link">
-                  <i className="nav-icon fas fa-pen" />
+                  <i className="nav-icon fas fa-pen-nib" />
                   <p>Quản lý từ vựng</p>
                 </NavLink>
               </li>
@@ -78,25 +78,25 @@ function Sidebar() {
               </li>
               <li className="nav-item">
                 <NavLink to="/qlnp" className="nav-link">
-                  <i className="nav-icon far fa-calendar-alt" />
+                  <i className="nav-icon far fa-file-alt" />
                   <p>Quản lý ngữ pháp</p>
                 </NavLink>
               </li>
               <li className="nav-item">
                 <NavLink to="/qlbd" className="nav-link">
-                  <i className="nav-icon far fa-image" />
+                  <i className="nav-icon fas fa-comment" />
                   <p>Quản lý bài đọc</p>
                 </NavLink>
               </li>
               <li className="nav-item">
                 <NavLink to="/qlbt" className="nav-link">
-                  <i className="nav-icon far fa-image" />
+                  <i className="nav-icon fas fa-pencil-ruler" />
                   <p>Quản lý bài tập</p>
                 </NavLink>
               </li>
               <li className="nav-item">
                 <NavLink to="/qluser" className="nav-link">
-                  <i className="nav-icon far fa-image" />
+                  <i className="nav-icon fas fa-user-alt" />
                   <p>Quản lý user</p>
                 </NavLink>
               </li>

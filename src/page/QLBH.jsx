@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import baiHocApi from "../Api/baiHocApi";
+import khoaHocApi from "../Api/khoaHocApi";
 import { useSelector } from "react-redux";
 import { authSelector } from "../redux/reducers/authReducer";
 import { Link } from "react-router-dom";
@@ -11,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 function QLBH() {
   const auth = useSelector(authSelector);
   const [baiHoc, setBaiHoc] = useState([]);
+  const [khoaHoc, setKhoaHoc] = useState([]);
   const [reloadPage, setReloadPage] = useState(false);
 
   const [selectedCourses, setSelectedCourses] = useState(["0"]);
@@ -28,6 +30,26 @@ function QLBH() {
     );
     setSelectedText(selectedText);
   };
+
+  useEffect(() => {
+    const fetchKHData = async () => {
+      try {
+        const response = await khoaHocApi.KhoaHocHandler(
+          "/",
+          null,
+          "get",
+          auth.token
+        );
+        if (response.status === "success") {
+          const responseData = response.data.data;
+          setKhoaHoc(responseData);
+        }
+      } catch (error) {
+        console.error("Loi fetch data: ", error);
+      }
+    };
+    fetchKHData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -133,21 +155,11 @@ function QLBH() {
             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <select multiple className="form-control" onChange={chonKhoaHoc}>
                 <option value="0">Tất cả khóa học</option>
-                <option value="65ec6c83e897e10f2734fd06">
-                  Khóa học HokkaiDo - N5
-                </option>
-                <option value="65ec6d8ce897e10f2734fd08">
-                  Khóa học KyoTo - N4
-                </option>
-                <option value="65ec6dabe897e10f2734fd0a">
-                  Khóa học OsaKa - N3
-                </option>
-                <option value="65ec6dc3e897e10f2734fd0c">
-                  Khóa học ToKyo - N2
-                </option>
-                <option value="65ec6e25e897e10f2734fd0f">
-                  Khóa học Nagasaki - N1
-                </option>
+                {khoaHoc.map((course) => (
+                  <option key={course._id} value={course._id}>
+                    {course.tenKhoahoc}
+                  </option>
+                ))}
               </select>
             </div>
 

@@ -1,41 +1,46 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+
+import tuVungApi from "../Api/tuVungApi";
 import baiHocApi from "../Api/baiHocApi";
 import khoaHocApi from "../Api/khoaHocApi";
+
 import { useSelector } from "react-redux";
 import { authSelector } from "../redux/reducers/authReducer";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function QLBH_CT() {
+function QLTV_CT() {
   let { id } = useParams();
   const auth = useSelector(authSelector);
+  const [tuVung, setTuVung] = useState([]);
   const [baiHoc, setBaiHoc] = useState([]);
   const [khoaHoc, setKhoaHoc] = useState([]);
-
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [newName, setNewName] = useState("");
-  const [newMucTieu, setNewMucTieu] = useState("");
-  const [newNoiDung, setNewNoiDung] = useState("");
+  const [newTV, setNewTV] = useState("");
+  const [newPhienAm, setNewPhienAm] = useState("");
+  const [newDinhNghia, setNewDinhNghia] = useState("");
+  const [newLoaiTu, setNewLoaiTu] = useState("");
+  const [newChuDe, setNewChuDe] = useState("");
+  const [newVD, setNewVD] = useState("");
+  const [newDNVD, setNewDNVD] = useState("");
   const [newHinhAnh, setNewHinhAnh] = useState("");
   const [newCreateAt, setNewCreateAt] = useState("");
 
-  const [selectedCourses, setSelectedCourses] = useState([]);
-  const [selectedText, setSelectedText] = useState();
+  const [selectedLesson, setSelectedLesson] = useState();
+  const [selectedCourse, setSelectedCourse] = useState();
 
-  const chonKhoaHoc = (e) => {
-    const selectedIds = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setSelectedCourses(selectedIds);
-    const selectedText = Array.from(
-      e.target.selectedOptions,
-      (option) => option.text
-    );
-    setSelectedText(selectedText);
+  const handleCourseChange = (event) => {
+    const courseId = event.target.value;
+    setSelectedCourse(courseId);
+    setSelectedLesson(null);
+  };
+
+  const handleLessonChange = (event) => {
+    const lessonId = event.target.value;
+    setSelectedLesson(lessonId);
   };
 
   useEffect(() => {
@@ -59,9 +64,29 @@ function QLBH_CT() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchBHData = async () => {
       try {
         const response = await baiHocApi.BaiHocHandler(
+          "/",
+          null,
+          "get",
+          auth.token
+        );
+        if (response.status === "success") {
+          const responseData = response.data.data;
+          setBaiHoc(responseData);
+        }
+      } catch (error) {
+        console.error("Loi fetch data: ", error);
+      }
+    };
+    fetchBHData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await tuVungApi.TuVungHandler(
           `/${id}`,
           null,
           "get",
@@ -69,13 +94,15 @@ function QLBH_CT() {
         );
         if (response.status === "success") {
           const responseData = response.data.data;
-          console.log(response);
-          setBaiHoc(responseData);
-          // Set các giá trị ban đầu cho state khi fetch dữ liệu thành công
-          setSelectedCourses(responseData.khoaHoc && responseData.khoaHoc.id);
-          setNewName(responseData.tenBaiHoc);
-          setNewMucTieu(responseData.mucTieu);
-          setNewNoiDung(responseData.noiDung);
+          setTuVung(responseData);
+          setSelectedLesson(responseData.baiHoc.id);
+          setNewTV(responseData.tu);
+          setNewPhienAm(responseData.phienAm);
+          setNewDinhNghia(responseData.dinhNghia);
+          setNewLoaiTu(responseData.loaiTu);
+          setNewChuDe(responseData.chuDe);
+          setNewVD(responseData.viDu);
+          setNewDNVD(responseData.dichNghiaVD);
           setNewHinhAnh(responseData.hinhAnh);
           setNewCreateAt(responseData.createAt);
         }
@@ -90,10 +117,14 @@ function QLBH_CT() {
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("tenBaiHoc", newName);
-      formData.append("mucTieu", newMucTieu);
-      formData.append("noiDung", newNoiDung);
-      formData.append("khoaHoc", selectedCourses);
+      formData.append("baiHoc", selectedLesson);
+      formData.append("tu", newTV);
+      formData.append("phienAm", newPhienAm);
+      formData.append("dinhNghia", newDinhNghia);
+      formData.append("loaiTu", newLoaiTu);
+      formData.append("chuDe", newChuDe);
+      formData.append("viDu", newVD);
+      formData.append("dichNghiaVD", newDNVD);
       if (typeof newHinhAnh === "object") {
         formData.append("image", newHinhAnh);
       } else {
@@ -103,7 +134,7 @@ function QLBH_CT() {
       const currentTime = new Date();
       formData.append("createAt", currentTime.toISOString());
 
-      const response = await baiHocApi.BaiHocHandler(
+      const response = await tuVungApi.TuVungHandler(
         `/${id}`,
         formData,
         "patch",
@@ -157,14 +188,14 @@ function QLBH_CT() {
         <div className="container-fluid">
           <div className="row mb-2">
             <div className="col-sm-6">
-              <h1>Chi tiết bài học</h1>
+              <h1>Chi tiết từ vựng</h1>
             </div>
             <div className="col-sm-6">
               <ol className="breadcrumb float-sm-right">
                 <li className="breadcrumb-item">
-                  <a href="/qlbh">Tất cả bài học</a>
+                  <a href="/qltv">Tất cả từ vựng</a>
                 </li>
-                <li className="breadcrumb-item active">Chi tiết bài học</li>
+                <li className="breadcrumb-item active">Chi tiết từ vựng</li>
               </ol>
             </div>
           </div>
@@ -174,7 +205,7 @@ function QLBH_CT() {
                 className="card-title"
                 style={{ color: "#15d442", fontWeight: "bold" }}
               >
-                Bài học ID: {id}
+                Từ vựng ID: {id}
               </h3>
               <div className="card-tools">
                 {isUpdating && (
@@ -205,14 +236,30 @@ function QLBH_CT() {
                 )}
               </div>
             </div>
+            <div
+              className="card-header"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <a className="card-title" style={{ fontWeight: "bold" }}>
+                Thuộc bài học: {tuVung.baiHoc && tuVung.baiHoc.tenBaiHoc} - ID:{" "}
+                {tuVung.baiHoc && tuVung.baiHoc.id}
+              </a>
+            </div>
             <div className="card-body p-0">
               <table className="table table-striped projects">
                 <thead>
                   <tr>
-                    <th style={{ width: "15%" }}>Tên bài học</th>
-                    <th style={{ width: "15%" }}>Mục tiêu</th>
-                    <th style={{ width: "30%" }}>Nội dung</th>
-                    <th style={{ width: "15%" }}>Thuộc khóa học</th>
+                    <th style={{ width: "10%" }}>Từ vựng</th>
+                    <th style={{ width: "10%" }}>Phiên âm</th>
+                    <th style={{ width: "10%" }}>Định nghĩa</th>
+                    <th style={{ width: "15%" }}>Loại từ</th>
+                    <th style={{ width: "10%" }}>Chủ đề</th>
+                    <th style={{ width: "15%" }}>Ví dụ</th>
+                    <th style={{ width: "20%" }}>Dịch nghĩa ví dụ</th>
                     <th style={{ width: "10%" }} className="text-center">
                       Ngày tạo
                     </th>
@@ -220,18 +267,21 @@ function QLBH_CT() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>{baiHoc.tenBaiHoc}</td>
-                    <td>{baiHoc.mucTieu}</td>
-                    <td>{baiHoc.noiDung}</td>
-                    <td>{baiHoc.khoaHoc && baiHoc.khoaHoc.tenKhoahoc}</td>
+                    <td>{tuVung.tu}</td>
+                    <td>{tuVung.phienAm}</td>
+                    <td>{tuVung.dinhNghia}</td>
+                    <td>{tuVung.loaiTu}</td>
+                    <td>{tuVung.chuDe}</td>
+                    <td>{tuVung.viDu}</td>
+                    <td>{tuVung.dichNghiaVD}</td>
                     <td className="text-center">
-                      {new Date(baiHoc.createAt).toLocaleDateString()}
+                      {new Date(tuVung.createAt).toLocaleDateString()}
                     </td>
                   </tr>
                   <tr>
-                    <td colSpan="5" className="text-center">
+                    <td colSpan="8" className="text-center">
                       <img
-                        src={baiHoc.hinhAnh}
+                        src={tuVung.hinhAnh}
                         alt="Hình ảnh"
                         style={{ maxWidth: "100%", height: "auto" }}
                       />
@@ -241,26 +291,6 @@ function QLBH_CT() {
               </table>
               {isUpdating && (
                 <div className="card-body">
-                  <input
-                    type="text"
-                    className="form-control mb-2"
-                    placeholder="Tên bài học mới"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                  />
-                  <input
-                    type="text"
-                    className="form-control mb-2"
-                    placeholder="Mục tiêu mới"
-                    value={newMucTieu}
-                    onChange={(e) => setNewMucTieu(e.target.value)}
-                  />
-                  <textarea
-                    className="form-control mb-2"
-                    placeholder="Nội dung mới"
-                    value={newNoiDung}
-                    onChange={(e) => setNewNoiDung(e.target.value)}
-                  />
                   <button
                     className="btn btn-success dropdown-toggle mb-2"
                     type="button"
@@ -269,9 +299,11 @@ function QLBH_CT() {
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
-                    {selectedText
-                      ? selectedText
-                      : baiHoc.khoaHoc && baiHoc.khoaHoc.tenKhoahoc}
+                    {selectedCourse
+                      ? khoaHoc.find((course) => course._id === selectedCourse)
+                          ?.tenKhoahoc
+                      : baiHoc.find((lesson) => lesson._id === tuVung.baiHoc.id)
+                          ?.tenBaiHoc}
                   </button>
                   <div
                     className="dropdown-menu"
@@ -279,9 +311,11 @@ function QLBH_CT() {
                   >
                     <select
                       multiple
-                      className="form-control"
-                      onChange={chonKhoaHoc}
+                      className="form-control mb-2"
+                      value={selectedCourse}
+                      onChange={handleCourseChange}
                     >
+                      {/* Render lựa chon dựa theo khóa hoc */}
                       {khoaHoc.map((course) => (
                         <option key={course._id} value={course._id}>
                           {course.tenKhoahoc}
@@ -289,6 +323,73 @@ function QLBH_CT() {
                       ))}
                     </select>
                   </div>
+                  {selectedCourse && (
+                    <div>
+                      <select
+                        className="form-control mb-2"
+                        value={selectedLesson}
+                        onChange={handleLessonChange}
+                      >
+                        <option value="">-- Chọn bài học --</option>
+                        {/* Render bài học theo lựa chọn */}
+                        {baiHoc
+                          .filter(
+                            (lesson) => lesson.khoaHoc._id === selectedCourse
+                          )
+                          .map((lesson) => (
+                            <option key={lesson._id} value={lesson._id}>
+                              {lesson.tenBaiHoc}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  )}
+
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Từ vựng mới"
+                    value={newTV}
+                    onChange={(e) => setNewTV(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Phiên âm mới"
+                    value={newPhienAm}
+                    onChange={(e) => setNewPhienAm(e.target.value)}
+                  />
+                  <input
+                    className="form-control mb-2"
+                    placeholder="Định nghĩa mới"
+                    value={newDinhNghia}
+                    onChange={(e) => setNewDinhNghia(e.target.value)}
+                  />
+                  <textarea
+                    className="form-control mb-2"
+                    placeholder="Loại từ mới"
+                    value={newLoaiTu}
+                    onChange={(e) => setNewLoaiTu(e.target.value)}
+                  />
+                  <input
+                    className="form-control mb-2"
+                    placeholder="Chủ đề mới"
+                    value={newChuDe}
+                    onChange={(e) => setNewChuDe(e.target.value)}
+                  />
+                  <textarea
+                    className="form-control mb-2"
+                    placeholder="Ví dụ mới"
+                    value={newVD}
+                    onChange={(e) => setNewVD(e.target.value)}
+                  />
+                  <textarea
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Dịch nghĩa ví dụ mới"
+                    value={newDNVD}
+                    onChange={(e) => setNewDNVD(e.target.value)}
+                  />
                   <input
                     type="text"
                     className="form-control mb-2"
@@ -337,4 +438,4 @@ function QLBH_CT() {
   );
 }
 
-export default QLBH_CT;
+export default QLTV_CT;
