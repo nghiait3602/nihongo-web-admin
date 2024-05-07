@@ -104,7 +104,36 @@ function QLNP_CT() {
     fetchData();
   }, [isUpdating]);
 
-  const updateData = async () => {};
+  const updateData = async () => {
+    try {
+      setIsLoading(true);
+      const reqBody = {
+        cauTruc,
+        tinhHuong,
+        dinhNghia: newDinhNghia,
+        viDu: newVD,
+        baiHoc: selectedLesson,
+        createAt: new Date().toISOString(),
+      };
+      const response = await nguPhapApi.NguPhapHandler(
+        `/${id}`,
+        reqBody,
+        "patch",
+        auth.token
+      );
+      console.log(response);
+      if (response.status === "success") {
+        toast.success("Cập nhật thành công!", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+        setIsUpdating(false);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("Loi fetch data: ", error);
+    }
+  };
 
   return (
     <>
@@ -231,9 +260,8 @@ function QLNP_CT() {
                     {selectedCourse
                       ? khoaHoc.find((course) => course._id === selectedCourse)
                           ?.tenKhoahoc
-                      : baiHoc.find(
-                          (lesson) => lesson._id === nguPhap.baiHoc
-                        )?.tenBaiHoc}
+                      : baiHoc.find((lesson) => lesson._id === nguPhap.baiHoc)
+                          ?.tenBaiHoc}
                   </button>
                   <div
                     className="dropdown-menu"
