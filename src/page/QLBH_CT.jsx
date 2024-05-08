@@ -1,3 +1,4 @@
+
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import baiHocApi from "../Api/baiHocApi";
@@ -6,6 +7,7 @@ import { useSelector } from "react-redux";
 import { authSelector } from "../redux/reducers/authReducer";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 
 function QLBH_CT() {
   let { id } = useParams();
@@ -16,11 +18,13 @@ function QLBH_CT() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+
   const [newName, setNewName] = useState("");
   const [newMucTieu, setNewMucTieu] = useState("");
   const [newNoiDung, setNewNoiDung] = useState("");
   const [newHinhAnh, setNewHinhAnh] = useState("");
   const [newCreateAt, setNewCreateAt] = useState("");
+
 
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedText, setSelectedText] = useState();
@@ -64,10 +68,10 @@ function QLBH_CT() {
         const response = await baiHocApi.BaiHocHandler(
           `/${id}`,
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           console.log(response);
           setBaiHoc(responseData);
@@ -80,7 +84,7 @@ function QLBH_CT() {
           setNewCreateAt(responseData.createAt);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchData();
@@ -90,36 +94,36 @@ function QLBH_CT() {
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("tenBaiHoc", newName);
-      formData.append("mucTieu", newMucTieu);
-      formData.append("noiDung", newNoiDung);
-      formData.append("khoaHoc", selectedCourses);
-      if (typeof newHinhAnh === "object") {
-        formData.append("image", newHinhAnh);
+      formData.append('tenBaiHoc', newName);
+      formData.append('mucTieu', newMucTieu);
+      formData.append('noiDung', newNoiDung);
+      formData.append('khoaHoc', selectedCourses);
+      if (typeof newHinhAnh === 'object') {
+        formData.append('image', newHinhAnh);
       } else {
         // Nếu newHinhAnh là đường dẫn
-        formData.append("hinhAnh", newHinhAnh);
+        formData.append('hinhAnh', newHinhAnh);
       }
       const currentTime = new Date();
-      formData.append("createAt", currentTime.toISOString());
+      formData.append('createAt', currentTime.toISOString());
 
       const response = await baiHocApi.BaiHocHandler(
         `/${id}`,
         formData,
-        "patch",
+        'patch',
         auth.token
       );
       console.log(response);
-      if (response.status === "success") {
-        toast.success("Cập nhật thành công!", {
-          position: "top-center",
+      if (response.status === 'success') {
+        toast.success('Cập nhật thành công!', {
+          position: 'top-center',
           autoClose: 2000,
         });
         setIsUpdating(false);
         setIsLoading(false);
       }
     } catch (error) {
-      console.error("Lỗi khi cập nhật dữ liệu: ", error);
+      console.error('Lỗi khi cập nhật dữ liệu: ', error);
     }
   };
 
@@ -170,6 +174,7 @@ function QLBH_CT() {
           </div>
           <div className="card">
             <div className="card-header">
+
               <h3
                 className="card-title"
                 style={{ color: "#15d442", fontWeight: "bold" }}
@@ -185,7 +190,7 @@ function QLBH_CT() {
                   >
                     <i
                       className="fas fa-times"
-                      style={{ marginRight: "5px" }}
+                      style={{ marginRight: '5px' }}
                     ></i>
                     Hủy
                   </button>
@@ -198,7 +203,7 @@ function QLBH_CT() {
                   >
                     <i
                       className="fas fa-pencil-alt"
-                      style={{ marginRight: "5px" }}
+                      style={{ marginRight: '5px' }}
                     ></i>
                     Sửa
                   </button>
@@ -209,11 +214,11 @@ function QLBH_CT() {
               <table className="table table-striped projects">
                 <thead>
                   <tr>
-                    <th style={{ width: "15%" }}>Tên bài học</th>
-                    <th style={{ width: "15%" }}>Mục tiêu</th>
-                    <th style={{ width: "30%" }}>Nội dung</th>
-                    <th style={{ width: "15%" }}>Thuộc khóa học</th>
-                    <th style={{ width: "10%" }} className="text-center">
+                    <th style={{ width: '15%' }}>Tên bài học</th>
+                    <th style={{ width: '15%' }}>Mục tiêu</th>
+                    <th style={{ width: '30%' }}>Nội dung</th>
+                    <th style={{ width: '15%' }}>Thuộc khóa học</th>
+                    <th style={{ width: '10%' }} className="text-center">
                       Ngày tạo
                     </th>
                   </tr>
@@ -233,7 +238,7 @@ function QLBH_CT() {
                       <img
                         src={baiHoc.hinhAnh}
                         alt="Hình ảnh"
-                        style={{ maxWidth: "100%", height: "auto" }}
+                        style={{ maxWidth: '100%', height: 'auto' }}
                       />
                     </td>
                   </tr>
@@ -299,13 +304,13 @@ function QLBH_CT() {
                   {newHinhAnh && (
                     <img
                       src={
-                        typeof newHinhAnh === "object"
+                        typeof newHinhAnh === 'object'
                           ? URL.createObjectURL(newHinhAnh)
                           : newHinhAnh
                       }
                       alt="Hình ảnh"
                       className="img-thumbnail mb-2"
-                      style={{ maxHeight: "200px" }}
+                      style={{ maxHeight: '200px' }}
                     />
                   )}
                   <input
@@ -323,7 +328,7 @@ function QLBH_CT() {
                   <button className="btn btn-primary" onClick={updateData}>
                     <i
                       className="fas fa-upload"
-                      style={{ marginRight: "5px" }}
+                      style={{ marginRight: '5px' }}
                     ></i>
                     Cập nhật
                   </button>
