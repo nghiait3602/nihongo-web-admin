@@ -14,6 +14,7 @@ import QLTV_CT from './page/QLTV_CT';
 import QLTV_NEW from './page/QLTV_NEW';
 import QLNP from './page/QLNP';
 import QLNP_CT from './page/QLNP_CT';
+import QLNP_NEW from './page/QLNP_NEW';
 import QLKanji from './page/QLKanji';
 import QLKanji_CT from './page/QLKanji_CT';
 import QLKanji_NEW from './page/QLKanji_NEW';
@@ -66,6 +67,7 @@ function HomeRouter() {
           <Route path="/qltv/tao-moi" element={<QLTV_NEW />} />
           <Route path="/qlnp" element={<QLNP />} />
           <Route path="/qlnp/chi-tiet-ngu-phap/:id" element={<QLNP_CT />} />
+          <Route path="/qlnp/tao-moi" element={<QLNP_NEW />} />
           <Route path="/qlkanji" element={<QLKanji />} />
           <Route path="/qlkanji/chi-tiet-kanji/:id" element={<QLKanji_CT />} />
           <Route path="/qlkanji/tao-moi" element={<QLKanji_NEW />} />

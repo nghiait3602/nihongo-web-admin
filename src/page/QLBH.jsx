@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 import baiHocApi from "../Api/baiHocApi";
 import khoaHocApi from "../Api/khoaHocApi";
+import tienTrinhApi from "../Api/tienTrinhApi";
+
 import { useSelector } from "react-redux";
 import { authSelector } from "../redux/reducers/authReducer";
 import { Link } from "react-router-dom";
@@ -14,6 +16,8 @@ function QLBH() {
   const [baiHoc, setBaiHoc] = useState([]);
   const [khoaHoc, setKhoaHoc] = useState([]);
   const [reloadPage, setReloadPage] = useState(false);
+
+  const [idBaiHocTR, setIdBaiHocTR] = useState([]);
 
   const [selectedCourses, setSelectedCourses] = useState(["0"]);
   const [selectedText, setSelectedText] = useState("Tất cả khóa học");
@@ -29,6 +33,37 @@ function QLBH() {
       (option) => option.text
     );
     setSelectedText(selectedText);
+  };
+
+  useEffect(() => {
+    const fetchKHData = async () => {
+      try {
+        const response = await tienTrinhApi.TienTrinhHandler(
+          "/",
+          null,
+          "get",
+          auth.token
+        );
+        if (response.status === "success") {
+          const responseData = response.data.data;
+          const lessonIds = responseData.map((lesson) => lesson.baiHoc.id);
+          setIdBaiHocTR(lessonIds);
+        }
+      } catch (error) {
+        console.error("Loi fetch data: ", error);
+      }
+    };
+    fetchKHData();
+  }, []);
+
+  const demIds = (item) => {
+    return idBaiHocTR.filter((id) => id === item.id).length; //đếm id trùng
+  };
+
+  const phanTramIds = (item) => {
+    const percent =
+      (idBaiHocTR.filter((id) => id === item.id).length / baiHoc.length) * 100; // chia phần trăm theo số lượng bài học
+    return percent.toFixed(1); // Lấy sau dấu phẩy 1 số thập phân
   };
 
   useEffect(() => {
@@ -187,9 +222,9 @@ function QLBH() {
               <thead>
                 <tr>
                   <th style={{ width: "1%" }}>STT</th>
-                  <th style={{ width: "20%" }}>Tên bài học</th>
-                  <th style={{ width: "30%" }}>Hình ảnh</th>
-                  <th>Số người đang học</th>
+                  <th style={{ width: "30%" }}>Tên bài học</th>
+                  <th style={{ width: "15%" }}>Hình ảnh</th>
+                  <th>Số người đã học</th>
                   <th style={{ width: "8%" }} className="text-center">
                     Trạng thái
                   </th>
@@ -214,6 +249,7 @@ function QLBH() {
                             alt="Avatar"
                             className="table-avatar"
                             src={item.hinhAnh}
+                            style={{ width: "60px", height: "auto" }}
                           />
                         </li>
                       </ul>
@@ -226,10 +262,12 @@ function QLBH() {
                           aria-valuenow={57}
                           aria-valuemin={0}
                           aria-valuemax={100}
-                          style={{ width: "57%" }}
+                          style={{ width: `${phanTramIds(item)}%` }}
                         ></div>
                       </div>
-                      <small>57% Nguời học</small>
+                      <small>
+                        {demIds(item)} nguời học ({phanTramIds(item)}%)
+                      </small>
                     </td>
                     <td className="project-state">
                       <span className="badge badge-success">Đang mở</span>

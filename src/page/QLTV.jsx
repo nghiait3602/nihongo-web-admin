@@ -122,8 +122,7 @@ function QLTV() {
                 <tr>
                   <th style={{ width: "1%" }}>STT</th>
                   <th style={{ width: "20%" }}>Từ vựng</th>
-                  <th style={{ width: "30%" }}>Hình ảnh</th>
-                  <th>Số người đang học</th>
+                  <th style={{ width: "30%" }}>Hình ảnh</th>         
                   <th style={{ width: "8%" }} className="text-center">
                     Trạng thái
                   </th>
@@ -151,20 +150,7 @@ function QLTV() {
                           />
                         </li>
                       </ul>
-                    </td>
-                    <td className="project_progress">
-                      <div className="progress progress-sm">
-                        <div
-                          className="progress-bar bg-green"
-                          role="progressbar"
-                          aria-valuenow={57}
-                          aria-valuemin={0}
-                          aria-valuemax={100}
-                          style={{ width: "77%" }}
-                        ></div>
-                      </div>
-                      <small>77% Nguời học</small>
-                    </td>
+                    </td>                  
                     <td className="project-state">
                       <span className="badge badge-success">Đang mở</span>
                     </td>
