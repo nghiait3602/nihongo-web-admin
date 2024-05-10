@@ -1,10 +1,57 @@
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { authSelector } from '../redux/reducers/authReducer';
 import { ToastContainer, toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
-
+import baiDocApi from '../Api/baidocApi';
 function QLBD() {
+  const auth = useSelector(authSelector);
+  const [baiDoc, setBaiDoc] = useState([]);
+  const [reloadPage, setReloadPage] = useState(false);
+  useEffect(() => {
+    const fetchDataBaiDoc = async () => {
+      try {
+        const res = await baiDocApi.BaiDocHandler('', 'get', '', auth.token);
+        if (res.status === 'success') {
+          const responseData = res.data.data;
+          setBaiDoc(responseData);
+        }
+      } catch (error) {
+        console.error('Loi fetch data: ', error);
+      }
+    };
+    fetchDataBaiDoc();
+  }, []);
+  function BDItem({ baidoc }) {
+    return (
+      <Link
+        to={`/qlbd/chi-tiet-bai-doc/${baidoc}`}
+        className="btn btn-primary btn-sm"
+        style={{ marginRight: '5px' }}
+      >
+        <i className="fas fa-folder" style={{ marginRight: '5px' }}></i>
+        Xem chi tiết
+      </Link>
+    );
+  }
+  const deleteData = async (id) => {
+    try {
+      await baiDocApi.BaiDocHandler(`/${id}`, null, 'delete', auth.token);
+      setReloadPage(!reloadPage);
+    } catch (error) {
+      console.error('Lỗi khi xóa bài đọc: ', error);
+      setReloadPage(!reloadPage);
+    }
+  };
+  const xacNhanDel = (id) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa bài đọc này không?')) {
+      deleteData(id);
+      toast.success('Xóa bài đọc thành công!', {
+        position: 'top-center',
+        autoClose: 2000,
+      });
+    }
+  };
   return (
     <>
       <ToastContainer />
@@ -12,7 +59,7 @@ function QLBD() {
         <div className="container-fluid">
           <div className="row mb-2">
             <div className="col-sm-6">
-              <h1>Tất cả bài đọc</h1>
+              <a href="/qlbd">Tất cả bài đọc</a>
             </div>
             <div className="col-sm-6">
               <ol className="breadcrumb float-sm-right">
@@ -58,7 +105,7 @@ function QLBD() {
           </div>
           <div className="card-body pb-0">
             <div className="row">
-              {/* {baiTap.map((item, index) => (
+              {baiDoc.map((item, index) => (
                 <div
                   className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column"
                   key={index}
@@ -93,7 +140,7 @@ function QLBD() {
                         className="lead"
                         style={{ fontFamily: 'Ms Mincho', fontWeight: 'bold' }}
                       >
-                        <b>{item.cauHoi}</b>
+                        <b>{item.tenBaiDoc}</b>
                       </h2>
                       <hr></hr>
                       <ul className="ml-4 mb-0 fa-ul text-muted">
@@ -104,17 +151,7 @@ function QLBD() {
                               style={{ color: '#f7ca28' }}
                             />
                           </span>
-                          <b>Điểm: </b> {item.diem}
-                        </li>
-                        <li className="small">
-                          <span className="fa-li">
-                            <i
-                              className="fas fa-check-circle"
-                              style={{ color: '#04d119' }}
-                            />
-                          </span>
-                          <b>Đáp án: </b>
-                          {item.cauTraLoiDung}
+                          <b>Tình Huống: </b> {item.tinhHuong}
                         </li>
                         <li className="small">
                           <span className="fa-li">
@@ -130,7 +167,7 @@ function QLBD() {
                     </div>
                     <div className="card-footer">
                       <div className="text-right">
-                        <BTItem key={item._id} baitap={item} />
+                        <BDItem key={item._id} baidoc={item._id} />
                         <a
                           className="btn btn-danger btn-sm"
                           onClick={() => xacNhanDel(item._id)}
@@ -145,7 +182,7 @@ function QLBD() {
                     </div>
                   </div>
                 </div>
-              ))} */}
+              ))}
             </div>
           </div>
         </div>
