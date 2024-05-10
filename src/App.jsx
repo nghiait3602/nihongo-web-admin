@@ -26,6 +26,7 @@ import QLBH from './page/QLBH';
 import QLBH_CT from './page/QLBH_CT';
 import QLBH_NEW from './page/QLBH_NEW';
 import QLBD from './page/QLBD';
+import QLBD_NEW from './page/QLBD_NEW';
 import QLUSER from './page/QLUSER';
 import PageTest from './page/pageTest';
 import Login from './page/Login';
@@ -78,6 +79,7 @@ function HomeRouter() {
           <Route path="/qlbh/chi-tiet-bai-hoc/:id" element={<QLBH_CT />} />
           <Route path="/qlbh/tao-moi" element={<QLBH_NEW />} />
           <Route path="/qlbd" element={<QLBD />} />
+          <Route path="/qlbd/tao-moi" element={<QLBD_NEW />} />
           <Route path="/qluser" element={<QLUSER />} />
           <Route path="/pageTest" element={<PageTest />} />
         </Routes>
