@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { ToastContainer, toast } from "react-toastify";
-import { Link } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../redux/reducers/authReducer';
+import { ToastContainer, toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 
-import baiTapApi from "../Api/baitapApi";
-import baiHocApi from "../Api/baiHocApi";
-import khoaHocApi from "../Api/khoaHocApi";
+import baiTapApi from '../Api/baitapApi';
+import baiHocApi from '../Api/baiHocApi';
+import khoaHocApi from '../Api/khoaHocApi';
 
 function QLBT_CT() {
   let { id } = useParams();
@@ -20,12 +20,12 @@ function QLBT_CT() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [cauHoi, setCauHoi] = useState("");
+  const [cauHoi, setCauHoi] = useState('');
   const [cauTraLoi, setCauTraLoi] = useState([]);
-  const [cauTraLoiDung, setCauTraLoiDung] = useState("");
-  const [diem, setDiem] = useState("");
-  const [thuocBaiHoc, setThuocBaiHoc] = useState("");
-  const [newCreateAt, setNewCreateAt] = useState("");
+  const [cauTraLoiDung, setCauTraLoiDung] = useState('');
+  const [diem, setDiem] = useState('');
+  const [thuocBaiHoc, setThuocBaiHoc] = useState('');
+  const [newCreateAt, setNewCreateAt] = useState('');
   const diemOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   const [selectedLesson, setSelectedLesson] = useState();
@@ -46,17 +46,17 @@ function QLBT_CT() {
     const fetchKHData = async () => {
       try {
         const response = await khoaHocApi.KhoaHocHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setKhoaHoc(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchKHData();
@@ -66,17 +66,17 @@ function QLBT_CT() {
     const fetchBHData = async () => {
       try {
         const response = await baiHocApi.BaiHocHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setBaiHoc(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchBHData();
@@ -88,10 +88,10 @@ function QLBT_CT() {
         const response = await baiTapApi.BaiTapHandler(
           `/${id}`,
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setBaiTap(responseData);
           setCauHoi(responseData.cauHoi);
@@ -103,7 +103,7 @@ function QLBT_CT() {
           setSelectedLesson(responseData.baiHoc);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchData();
@@ -113,13 +113,13 @@ function QLBT_CT() {
     try {
       setIsLoading(true);
       let cauTraLoiArray = [];
-      if (cauTraLoi.includes(",")) {
-        if (cauTraLoi.split(",").length === 4) {
-          cauTraLoiArray = cauTraLoi.split(",").map((item) => item.trim());
+      if (cauTraLoi.includes(',')) {
+        if (cauTraLoi.split(',').length === 4) {
+          cauTraLoiArray = cauTraLoi.split(',').map((item) => item.trim());
         } else {
           setIsLoading(false);
-          toast.warning("Các đáp án phải có đúng 4 câu!", {
-            position: "top-center",
+          toast.warning('Các đáp án phải có đúng 4 câu!', {
+            position: 'top-center',
             autoClose: 2000,
           });
           return;
@@ -138,20 +138,20 @@ function QLBT_CT() {
       const response = await baiTapApi.BaiTapHandler(
         `/${id}`,
         reqBody,
-        "patch",
+        'patch',
         auth.token
       );
       console.log(response);
-      if (response.status === "success") {
-        toast.success("Cập nhật thành công!", {
-          position: "top-center",
+      if (response.status === 'success') {
+        toast.success('Cập nhật thành công!', {
+          position: 'top-center',
           autoClose: 2000,
         });
         setIsUpdating(false);
         setIsLoading(false);
       }
     } catch (error) {
-      console.error("Loi fetch data: ", error);
+      console.error('Loi fetch data: ', error);
     }
   };
 
@@ -161,16 +161,16 @@ function QLBT_CT() {
       {isLoading && (
         <div
           style={{
-            position: "fixed",
-            top: "0",
-            left: "0",
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(255, 255, 255, 0.7)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "9999",
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: '9999',
           }}
         >
           <div className="spinner-border text-primary" role="status">
@@ -225,9 +225,9 @@ function QLBT_CT() {
               <label htmlFor="inputDescription">
                 Các Đáp Án Lựa Chọn
                 <b
-                  style={{ fontStyle: "italic", opacity: "0.7", color: "red" }}
+                  style={{ fontStyle: 'italic', opacity: '0.7', color: 'red' }}
                 >
-                  {" "}
+                  {' '}
                   *4 câu - cách nhau bằng dấu phẩy
                 </b>
               </label>
@@ -346,7 +346,7 @@ function QLBT_CT() {
                 <button className="btn btn-primary" onClick={updateData}>
                   <i
                     className="fas fa-upload"
-                    style={{ marginRight: "5px" }}
+                    style={{ marginRight: '5px' }}
                   ></i>
                   Cập nhật
                 </button>
@@ -357,7 +357,7 @@ function QLBT_CT() {
                 >
                   <i
                     className="fas fa-times"
-                    style={{ marginRight: "5px" }}
+                    style={{ marginRight: '5px' }}
                   ></i>
                   Hủy
                 </button>

@@ -1,158 +1,162 @@
+import { useState, useEffect } from "react";
+
+import khoaHocApi from "../Api/khoaHocApi";
+import { useSelector } from "react-redux";
+import { authSelector } from "../redux/reducers/authReducer";
+import { ToastContainer, toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+
 function QLKH() {
+  const auth = useSelector(authSelector);
+  const [khoaHoc, setKhoaHoc] = useState([]);
+  const [reloadPage, setReloadPage] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await khoaHocApi.KhoaHocHandler(
+          "/",
+          null,
+          "get",
+          auth.token
+        );
+        if (response.status === "success") {
+          const responseData = response.data.data;
+          setKhoaHoc(responseData);
+        }
+      } catch (error) {
+        console.error("Loi fetch data: ", error);
+      }
+    };
+    fetchData();
+  }, [reloadPage]);
+
+  function KHItem({ khoahoc }) {
+    return (
+      <Link
+        to={`/qlkh/chi-tiet-kh/${khoahoc._id}`}
+        className="btn btn-primary btn-sm"
+        style={{ marginRight: "5px" }}
+      >
+        <i className="fas fa-folder" style={{ marginRight: "5px" }}></i>
+        Xem chi tiết
+      </Link>
+    );
+  }
+
+  const deleteData = async (id) => {
+    try {
+      await khoaHocApi.KhoaHocHandler(`/${id}`, null, "delete", auth.token);
+      setReloadPage(!reloadPage);
+    } catch (error) {
+      console.error("Lỗi khi xóa khóa học: ", error);
+      setReloadPage(!reloadPage);
+    }
+  };
+  const xacNhanDel = (id) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa khóa học này không?")) {
+      deleteData(id);
+      toast.success("Xóa khóa học thành công!", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    }
+  };
+
   return (
-    <div className="card card-default">
-      <div className="card-header">
-        <h3 className="card-title">Select2 (Default Theme)</h3>
-        <div className="card-tools">
-          <button
-            type="button"
-            className="btn btn-tool"
-            data-card-widget="collapse"
-          >
-            <i className="fas fa-minus" />
-          </button>
-          <button
-            type="button"
-            className="btn btn-tool"
-            data-card-widget="remove"
-          >
-            <i className="fas fa-times" />
-          </button>
+    <>
+      <ToastContainer />
+      <div className="content-header">
+        <div className="container-fluid">
+          <div className="row mb-2">
+            <div className="col-sm-6">
+              <h1>Tất cả khóa học</h1>
+            </div>
+            <div className="col-sm-6">
+              <ol className="breadcrumb float-sm-right">
+                <li className="breadcrumb-item">
+                  <a href="/home">Home</a>
+                </li>
+                <li className="breadcrumb-item active">Tất cả khóa học</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div className="card">
+          <div className="card-header">
+            <div className="card-tools"></div>
+          </div>
+          <div className="card-body p-0">
+            <table className="table table-striped projects">
+              <thead>
+                <tr>
+                  <th style={{ width: "1%" }}>STT</th>
+                  <th style={{ width: "20%" }}>Khóa học</th>
+                  <th style={{ width: "20%" }}>Icon</th>
+                  <th className="text-center">Số người đang hoặc đã học</th>
+                  <th style={{ width: "8%" }} className="text-center">
+                    Trạng thái
+                  </th>
+                  <th style={{ width: "20%" }}></th>
+                </tr>
+              </thead>
+              <tbody>
+                {khoaHoc.map((item, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>
+                      <a>{item.tenKhoahoc}</a>
+                      <br />
+                      <small>
+                        Tạo ngày: {new Date(item.createAt).toLocaleDateString()}
+                      </small>
+                    </td>
+                    <td>
+                      <ul className="list-inline">
+                        <li className="list-inline-item">
+                          <img
+                            alt="Avatar"
+                            className="table-avatar"
+                            src={item.hinhAnh}
+                          />
+                        </li>
+                      </ul>
+                    </td>
+                    <td className="text-center">
+                      {item.dsNguoiHoc.length > 0 ? (
+                        <span>{item.dsNguoiHoc.length}</span>
+                      ) : (
+                        <span>0</span>
+                      )}
+                      <i style={{ width: "15%" }} className="nav-icon fas fa-user-alt" />
+                      <br />
+                    </td>
+                    <td className="project-state">
+                      <span className="badge badge-success">Đang mở</span>
+                    </td>
+                    <td className="project-actions text-right">
+                      <KHItem key={item._id} khoahoc={item} />
+
+                      {/* <a
+                        className="btn btn-danger btn-sm"
+                        onClick={() => xacNhanDel(item._id)}
+                      >
+                        <i
+                          className="fas fa-trash"
+                          style={{ marginRight: "5px" }}
+                        ></i>
+                        Xóa
+                      </a> */}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      {/* /.card-header */}
-      <div className="card-body">
-        <div className="row">
-          <div className="col-md-6">
-            <div className="form-group">
-              <label>Minimal</label>
-              <select
-                className="form-control select2"
-                style={{ width: '100%' }}
-              >
-                <option selected="selected">Alabama</option>
-                <option>Alaska</option>
-                <option>California</option>
-                <option>Delaware</option>
-                <option>Tennessee</option>
-                <option>Texas</option>
-                <option>Washington</option>
-              </select>
-            </div>
-            {/* /.form-group */}
-            <div className="form-group">
-              <label>Disabled</label>
-              <select
-                className="form-control select2"
-                disabled="disabled"
-                style={{ width: '100%' }}
-              >
-                <option selected="selected">Alabama</option>
-                <option>Alaska</option>
-                <option>California</option>
-                <option>Delaware</option>
-                <option>Tennessee</option>
-                <option>Texas</option>
-                <option>Washington</option>
-              </select>
-            </div>
-            {/* /.form-group */}
-          </div>
-          {/* /.col */}
-          <div className="col-md-6">
-            <div className="form-group">
-              <label>Multiple</label>
-              <select
-                className="select2"
-                multiple="multiple"
-                data-placeholder="Select a State"
-                style={{ width: '100%' }}
-              >
-                <option>Alabama</option>
-                <option>Alaska</option>
-                <option>California</option>
-                <option>Delaware</option>
-                <option>Tennessee</option>
-                <option>Texas</option>
-                <option>Washington</option>
-              </select>
-            </div>
-            {/* /.form-group */}
-            <div className="form-group">
-              <label>Disabled Result</label>
-              <select
-                className="form-control select2"
-                style={{ width: '100%' }}
-              >
-                <option selected="selected">Alabama</option>
-                <option>Alaska</option>
-                <option disabled="disabled">California (disabled)</option>
-                <option>Delaware</option>
-                <option>Tennessee</option>
-                <option>Texas</option>
-                <option>Washington</option>
-              </select>
-            </div>
-            {/* /.form-group */}
-          </div>
-          {/* /.col */}
-        </div>
-        {/* /.row */}
-        <h5>Custom Color Variants</h5>
-        <div className="row">
-          <div className="col-12 col-sm-6">
-            <div className="form-group">
-              <label>Minimal (.select2-danger)</label>
-              <select
-                className="form-control select2 select2-danger"
-                data-dropdown-css-class="select2-danger"
-                style={{ width: '100%' }}
-              >
-                <option selected="selected">Alabama</option>
-                <option>Alaska</option>
-                <option>California</option>
-                <option>Delaware</option>
-                <option>Tennessee</option>
-                <option>Texas</option>
-                <option>Washington</option>
-              </select>
-            </div>
-            {/* /.form-group */}
-          </div>
-          {/* /.col */}
-          <div className="col-12 col-sm-6">
-            <div className="form-group">
-              <label>Multiple (.select2-purple)</label>
-              <div className="select2-purple">
-                <select
-                  className="select2"
-                  multiple="multiple"
-                  data-placeholder="Select a State"
-                  data-dropdown-css-class="select2-purple"
-                  style={{ width: '100%' }}
-                >
-                  <option>Alabama</option>
-                  <option>Alaska</option>
-                  <option>California</option>
-                  <option>Delaware</option>
-                  <option>Tennessee</option>
-                  <option>Texas</option>
-                  <option>Washington</option>
-                </select>
-              </div>
-            </div>
-            {/* /.form-group */}
-          </div>
-          {/* /.col */}
-        </div>
-        {/* /.row */}
-      </div>
-      {/* /.card-body */}
-      <div className="card-footer">
-        Visit <a href="https://select2.github.io/">Select2 documentation</a> for
-        more examples and information about the plugin.
-      </div>
-    </div>
+    </>
   );
 }
 
