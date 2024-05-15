@@ -22,7 +22,7 @@ function QLKH_CT() {
   const [hinhAnh, setHinhAnh] = useState("");
   const [dsNguoiHoc, setDSNguoiHoc] = useState([]);
   const [dsBaiHoc, setDSBaiHoc] = useState([]);
-  const [newCreateAt, setNewCreateAt] = useState('');
+  const [newCreateAt, setNewCreateAt] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,7 +90,7 @@ function QLKH_CT() {
       setHinhAnh(file);
     }
   };
-  
+
   return (
     <>
       <ToastContainer />
@@ -230,14 +230,36 @@ function QLKH_CT() {
                 )}
               </select>
             </div> */}
+            {/* <div className="form-group">
+              <label htmlFor="inputName">Danh sách người học</label>
+              <textarea
+                className="form-control mb-2"
+                readOnly
+                rows="5"
+                value={
+                  dsNguoiHoc.length === 0? "Chưa có user bắt đầu học khóa học này"
+                  : dsNguoiHoc.map((nguoihoc) => `${nguoihoc.name} - ${nguoihoc.email}`).join("\n")}
+              ></textarea>
+            </div> */}
             <div className="form-group">
               <label htmlFor="inputName">Danh sách người học</label>
-                <textarea className="form-control mb-2" 
-                  readOnly 
-                  rows="5" 
-                  value={dsNguoiHoc.length === 0 ? "Chưa có user bắt đầu học khóa học này" : 
-                  dsNguoiHoc.map(nguoihoc => `${nguoihoc.name} - ${nguoihoc.email}`).join('\n')}>
-                </textarea>
+              <ul className="list-group">
+                {dsNguoiHoc.length === 0 ? (
+                  <li className="list-group-item">
+                    Chưa có user bắt đầu học khóa học này
+                  </li>
+                ) : (
+                  dsNguoiHoc.map((nguoihoc) => (
+                    <li key={nguoihoc.id} className="list-group-item">
+                      <Link
+                        to={`/qluser/chi-tiet-user/${nguoihoc.id}`}
+                      >
+                        <span>{`${nguoihoc.name} - ${nguoihoc.email}`}</span>
+                      </Link>
+                    </li>
+                  ))
+                )}
+              </ul>
             </div>
             {/* <div className="form-group">
               <label htmlFor="inputName">Danh sách bài học</label>
@@ -253,7 +275,7 @@ function QLKH_CT() {
                 )}
               </select>
             </div> */}
-            <div className="form-group">
+            {/* <div className="form-group">
               <label htmlFor="inputName">Danh sách bài học</label>
                 <textarea className="form-control mb-2" 
                   readOnly 
@@ -261,6 +283,26 @@ function QLKH_CT() {
                   value={dsBaiHoc.length === 0 ? "Chưa có bài học cho khóa học này" : 
                   dsBaiHoc.map(baihoc => `${baihoc.tenBaiHoc} - ${baihoc.mucTieu}`).join('\n')}>
                 </textarea>
+            </div> */}
+            <div className="form-group">
+              <label htmlFor="inputName">Danh sách bài học</label>
+              <ul className="list-group">
+                {dsBaiHoc.length === 0 ? (
+                  <li className="list-group-item">
+                    Chưa có bài học cho khóa học này
+                  </li>
+                ) : (
+                  dsBaiHoc.map((baihoc) => (
+                    <li key={baihoc.id} className="list-group-item">
+                      <Link
+                        to={`/qlbh/chi-tiet-bai-hoc/${baihoc.id}`}
+                      >
+                        <span>{`${baihoc.tenBaiHoc} - ${baihoc.mucTieu}`}</span>
+                      </Link>
+                    </li>
+                  ))
+                )}
+              </ul>
             </div>
             {isUpdating && (
               <>
