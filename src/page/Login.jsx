@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import authenticationAPI from '../Api/authApi';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addAuth } from '../redux/reducers/authReducer';
+import { NavLink } from 'react-router-dom';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const data = {
     email: email,
     password: password,
@@ -47,12 +48,11 @@ function Login() {
       <div className="login-box">
         <div className="login-logo">
           <a href="../../index2.html">
-            <b>Admin</b>LTE
+            <b>Admin</b> Nihongo App
           </a>
         </div>
         <div className="card">
           <div className="card-body login-card-body">
-            <p className="login-box-msg">Sign in to start your session</p>
             <form method="post">
               <div className="input-group mb-3">
                 <input
@@ -86,7 +86,7 @@ function Login() {
                 <div className="col-8">
                   <div className="icheck-primary">
                     <input type="checkbox" id="remember" />
-                    <label htmlFor="remember">Remember Me</label>
+                    <label htmlFor="remember">Lưu mật khẩu</label>
                   </div>
                 </div>
                 <div className="col-4">
@@ -99,22 +99,10 @@ function Login() {
                 </div>
               </div>
             </form>
-            <div className="social-auth-links text-center mb-3">
-              <p>- OR -</p>
-              <a href="#" className="btn btn-block btn-primary">
-                <i className="fab fa-facebook mr-2" /> Sign in using Facebook
-              </a>
-              <a href="#" className="btn btn-block btn-danger">
-                <i className="fab fa-google-plus mr-2" /> Sign in using Google+
-              </a>
-            </div>
             <p className="mb-1">
-              <a href="forgot-password.html">I forgot my password</a>
-            </p>
-            <p className="mb-0">
-              <a href="register.html" className="text-center">
-                Register a new membership
-              </a>
+              <NavLink to="/forgot" className="nav-link">
+                <a href="forgot-password.html">I forgot my password</a>
+              </NavLink>
             </p>
           </div>
         </div>

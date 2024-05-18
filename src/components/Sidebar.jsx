@@ -1,15 +1,31 @@
-import { useDispatch } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
-import { removeAuth } from "../redux/reducers/authReducer";
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { authSelector, removeAuth } from '../redux/reducers/authReducer';
+import { useEffect, useState } from 'react';
+import userApi from '../Api/userApi';
 
 function Sidebar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const auth = useSelector(authSelector);
+  const [user, setUser] = useState();
+  useEffect(() => {
+    const getMe = async () => {
+      try {
+        const res = await userApi.UserHandler('/me', '', 'get', auth.token);
+        console.log(res.data.data);
+        setUser(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getMe();
+  });
   function testLogout(e) {
     e.preventDefault();
-    localStorage.removeItem("auth");
+    localStorage.removeItem('auth');
     dispatch(removeAuth());
-    navigate("/login");
+    navigate('/login');
   }
   return (
     <>
@@ -17,16 +33,30 @@ function Sidebar() {
         <div className="sidebar">
           <div className="user-panel mt-3 pb-3 mb-3 d-flex">
             <div className="image">
-              <img
-                src="/dist/img/user2-160x160.jpg"
-                className="img-circle elevation-2"
-                alt="User Image"
-              />
+              {user ? (
+                <img
+                  src={user.photo}
+                  className="img-circle elevation-2"
+                  alt="User Image"
+                />
+              ) : (
+                <img
+                  src="../src/assets/Img/iconapp.png"
+                  className="img-circle elevation-2"
+                  alt="User Image"
+                />
+              )}
             </div>
             <div className="info">
-              <a href="#" className="d-block">
-                Alexander Pierce
-              </a>
+              {user ? (
+                <a href="#" className="d-block">
+                  {user.name}
+                </a>
+              ) : (
+                <a href="#" className="d-block">
+                  ADMIN
+                </a>
+              )}
             </div>
           </div>
           <div className="form-inline">
@@ -51,7 +81,7 @@ function Sidebar() {
               role="menu"
               data-accordion="false"
             >
-              <li className="nav-header">EXAMPLES</li>
+              <li className="nav-header">THANH CÔNG CỤ</li>
               <li className="nav-item">
                 <NavLink to="/qlkh" className="nav-link">
                   <i className="nav-icon far fa-calendar-alt" />
@@ -101,7 +131,9 @@ function Sidebar() {
                 </NavLink>
               </li>
               <li className="nav-item">
-                <button onClick={testLogout}>LogOut</button>
+                <button className="btn btn-info" onClick={testLogout}>
+                  LogOut
+                </button>
               </li>
             </ul>
           </nav>
