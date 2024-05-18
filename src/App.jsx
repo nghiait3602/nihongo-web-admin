@@ -33,6 +33,7 @@ import QLUSER from './page/QLUSER';
 import QLUSER_CT from './page/QLUSER_CT';
 import QLUSER_NEW from './page/QLUSER_NEW';
 import PageTest from './page/pageTest';
+import Forgot from './page/Forgot';
 import Login from './page/Login';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -56,6 +57,7 @@ function AuthRouter() {
     <Routes>
       <Route path="/" element={<Navigate to="/login" />}></Route>
       <Route path="/login" element={<Login />}></Route>
+      <Route path="/forgot" element={<Forgot />}></Route>
     </Routes>
   );
 }
