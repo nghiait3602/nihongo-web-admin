@@ -8,32 +8,31 @@ import {
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Sidebar from './components/Sidebar';
-import Home from './page/Home';
-import QLTV from './page/QLTV';
-import QLTV_CT from './page/QLTV_CT';
-import QLTV_NEW from './page/QLTV_NEW';
-import QLNP from './page/QLNP';
-import QLNP_CT from './page/QLNP_CT';
-import QLNP_NEW from './page/QLNP_NEW';
-import QLKanji from './page/QLKanji';
-import QLKanji_CT from './page/QLKanji_CT';
-import QLKanji_NEW from './page/QLKanji_NEW';
-import QLKH from './page/QLKH';
-import QLKH_CT from './page/QLKH_CT';
-import QLBT from './page/QLBT';
-import QLBT_CT from './page/QLBT_CT';
-import QLBT_NEW from './page/QLBT_NEW';
-import QLBH from './page/QLBH';
-import QLBH_CT from './page/QLBH_CT';
-import QLBH_NEW from './page/QLBH_NEW';
-import QLBD from './page/QLBD';
-import QLBD_NEW from './page/QLBD_NEW';
-import QLBD_CT from './page/QLBD_CT';
-import QLUSER from './page/QLUSER';
-import QLUSER_CT from './page/QLUSER_CT';
-import QLUSER_NEW from './page/QLUSER_NEW';
-import PageTest from './page/pageTest';
-import Forgot from './page/Forgot';
+import Home from './page/home/Home';
+import QLTV from './page/tuvung/QLTV';
+import QLTV_CT from './page/tuvung/QLTV_CT';
+import QLTV_NEW from './page/tuvung//QLTV_NEW';
+import QLNP from './page/nguphap/QLNP';
+import QLNP_CT from './page/nguphap/QLNP_CT';
+import QLNP_NEW from './page/nguphap/QLNP_NEW';
+import QLKanji from './page/kanji/QLKanji';
+import QLKanji_CT from './page/kanji/QLKanji_CT';
+import QLKanji_NEW from './page/kanji/QLKanji_NEW';
+import QLKH from './page/khoahoc/QLKH';
+import QLKH_CT from './page/khoahoc/QLKH_CT';
+import QLBT from './page/baitap/QLBT';
+import QLBT_CT from './page/baitap/QLBT_CT';
+import QLBT_NEW from './page/baitap/QLBT_NEW';
+import QLBH from './page/baihoc/QLBH';
+import QLBH_CT from './page/baihoc/QLBH_CT';
+import QLBH_NEW from './page/baihoc/QLBH_NEW';
+import QLBD from './page/baidoc/QLBD';
+import QLBD_NEW from './page/baidoc/QLBD_NEW';
+import QLBD_CT from './page/baidoc/QLBD_CT';
+import QLUSER from './page/user/QLUSER';
+import QLUSER_CT from './page/user/QLUSER_CT';
+import QLUSER_NEW from './page/user/QLUSER_NEW';
+import Forgot from './page/forgot/Forgot';
 import Login from './page/Login';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -91,7 +90,6 @@ function HomeRouter() {
           <Route path="/qluser" element={<QLUSER />} />
           <Route path="/qluser/chi-tiet-user/:id" element={<QLUSER_CT />} />
           <Route path="/qluser/tao-moi" element={<QLUSER_NEW />} />
-          <Route path="/pageTest" element={<PageTest />} />
         </Routes>
       </div>
       <Sidebar />

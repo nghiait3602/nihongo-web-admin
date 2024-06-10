@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import tuVungApi from "../Api/tuVungApi";
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { Link } from "react-router-dom";
+import tuVungApi from '../../Api/tuVungApi';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { Link } from 'react-router-dom';
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function QLTV() {
   const auth = useSelector(authSelector);
@@ -17,17 +17,17 @@ function QLTV() {
     const fetchData = async () => {
       try {
         const response = await tuVungApi.TuVungHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setTuVung(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchData();
@@ -35,18 +35,18 @@ function QLTV() {
 
   const deleteData = async (id) => {
     try {
-      await tuVungApi.TuVungHandler(`/${id}`, null, "delete", auth.token);
+      await tuVungApi.TuVungHandler(`/${id}`, null, 'delete', auth.token);
       setReloadPage(!reloadPage);
     } catch (error) {
-      console.error("Lỗi khi xóa từ vựng: ", error);
+      console.error('Lỗi khi xóa từ vựng: ', error);
       setReloadPage(!reloadPage);
     }
   };
   const xacNhanDel = (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa từ vựng này không?")) {
+    if (window.confirm('Bạn có chắc chắn muốn xóa từ vựng này không?')) {
       deleteData(id);
-      toast.success("Xóa từ vựng thành công!", {
-        position: "top-center",
+      toast.success('Xóa từ vựng thành công!', {
+        position: 'top-center',
         autoClose: 2000,
       });
     }
@@ -57,9 +57,9 @@ function QLTV() {
       <Link
         to={`/qltv/chi-tiet-tu-vung/${tuvung._id}`}
         className="btn btn-primary btn-sm"
-        style={{ marginRight: "5px" }}
+        style={{ marginRight: '5px' }}
       >
-        <i className="fas fa-folder" style={{ marginRight: "5px" }}></i>
+        <i className="fas fa-folder" style={{ marginRight: '5px' }}></i>
         Xem chi tiết
       </Link>
     );
@@ -89,11 +89,11 @@ function QLTV() {
             <Link
               to={`/qltv/tao-moi`}
               className="btn btn-warning btn-sm"
-              style={{ marginRight: "5px" }}
+              style={{ marginRight: '5px' }}
             >
               <i
                 className="fas fa-plus-circle"
-                style={{ marginRight: "5px" }}
+                style={{ marginRight: '5px' }}
               ></i>
               Thêm từ vựng
             </Link>
@@ -120,13 +120,13 @@ function QLTV() {
             <table className="table table-striped projects">
               <thead>
                 <tr>
-                  <th style={{ width: "1%" }}>STT</th>
-                  <th style={{ width: "20%" }}>Từ vựng</th>
-                  <th style={{ width: "30%" }}>Hình ảnh</th>         
-                  <th style={{ width: "8%" }} className="text-center">
+                  <th style={{ width: '1%' }}>STT</th>
+                  <th style={{ width: '20%' }}>Từ vựng</th>
+                  <th style={{ width: '30%' }}>Hình ảnh</th>
+                  <th style={{ width: '8%' }} className="text-center">
                     Trạng thái
                   </th>
-                  <th style={{ width: "20%" }}></th>
+                  <th style={{ width: '20%' }}></th>
                 </tr>
               </thead>
               <tbody>
@@ -150,7 +150,7 @@ function QLTV() {
                           />
                         </li>
                       </ul>
-                    </td>                  
+                    </td>
                     <td className="project-state">
                       <span className="badge badge-success">Đang mở</span>
                     </td>
@@ -162,7 +162,7 @@ function QLTV() {
                       >
                         <i
                           className="fas fa-trash"
-                          style={{ marginRight: "5px" }}
+                          style={{ marginRight: '5px' }}
                         ></i>
                         Xóa
                       </a>

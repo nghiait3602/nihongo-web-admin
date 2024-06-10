@@ -1,22 +1,22 @@
-import { useState, useEffect } from "react";
-import baiHocApi from "../Api/baiHocApi";
-import khoaHocApi from "../Api/khoaHocApi";
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useState, useEffect } from 'react';
+import baiHocApi from '../../Api/baiHocApi';
+import khoaHocApi from '../../Api/khoaHocApi';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function QLBH_NEW() {
   const auth = useSelector(authSelector);
   const [khoaHoc, setKhoaHoc] = useState([]);
 
-  const [newName, setNewName] = useState("");
-  const [newMucTieu, setNewMucTieu] = useState("");
-  const [newNoiDung, setNewNoiDung] = useState("");
-  const [newHinhAnh, setNewHinhAnh] = useState("");
+  const [newName, setNewName] = useState('');
+  const [newMucTieu, setNewMucTieu] = useState('');
+  const [newNoiDung, setNewNoiDung] = useState('');
+  const [newHinhAnh, setNewHinhAnh] = useState('');
 
   const [selectedCourses, setSelectedCourses] = useState([]);
-  const [selectedText, setSelectedText] = useState("Chọn khóa học");
+  const [selectedText, setSelectedText] = useState('Chọn khóa học');
   const [isLoading, setIsLoading] = useState(false);
 
   const chonKhoaHoc = (e) => {
@@ -36,17 +36,17 @@ function QLBH_NEW() {
     const fetchKHData = async () => {
       try {
         const response = await khoaHocApi.KhoaHocHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setKhoaHoc(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchKHData();
@@ -56,39 +56,39 @@ function QLBH_NEW() {
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("tenBaiHoc", newName);
-      formData.append("mucTieu", newMucTieu);
-      formData.append("noiDung", newNoiDung);
-      formData.append("khoaHoc", selectedCourses);
+      formData.append('tenBaiHoc', newName);
+      formData.append('mucTieu', newMucTieu);
+      formData.append('noiDung', newNoiDung);
+      formData.append('khoaHoc', selectedCourses);
 
-      if (typeof newHinhAnh === "object") {
-        formData.append("image", newHinhAnh);
+      if (typeof newHinhAnh === 'object') {
+        formData.append('image', newHinhAnh);
       } else {
         // Nếu newHinhAnh là đường dẫn
-        formData.append("hinhAnh", newHinhAnh);
+        formData.append('hinhAnh', newHinhAnh);
       }
 
       const response = await baiHocApi.BaiHocHandler(
         `/`,
         formData,
-        "post",
+        'post',
         auth.token
       );
       console.log(response);
-      if (response.status === "success") {
-        toast.success("Tạo bài học thành công!", {
-          position: "top-center",
+      if (response.status === 'success') {
+        toast.success('Tạo bài học thành công!', {
+          position: 'top-center',
           autoClose: 2000,
         });
         setIsLoading(false);
         setTimeout(() => {
-          window.location.href = "/qlbh";
+          window.location.href = '/qlbh';
         }, 2000);
       }
     } catch (error) {
-      console.error("Lỗi dữ liệu: ", error);
+      console.error('Lỗi dữ liệu: ', error);
       toast.error(`Tạo bài học thất bại!\nVui lòng kiểm tra lại thông tin.`, {
-        position: "top-center",
+        position: 'top-center',
         autoClose: 2000,
       });
     }
@@ -107,16 +107,16 @@ function QLBH_NEW() {
       {isLoading && (
         <div
           style={{
-            position: "fixed",
-            top: "0",
-            left: "0",
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(255, 255, 255, 0.7)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "9999",
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: '9999',
           }}
         >
           <div className="spinner-border text-primary" role="status">
@@ -199,13 +199,13 @@ function QLBH_NEW() {
                 {newHinhAnh && (
                   <img
                     src={
-                      typeof newHinhAnh === "object"
+                      typeof newHinhAnh === 'object'
                         ? URL.createObjectURL(newHinhAnh)
                         : newHinhAnh
                     }
                     alt="Hình ảnh"
                     className="img-thumbnail mb-2"
-                    style={{ maxHeight: "200px" }}
+                    style={{ maxHeight: '200px' }}
                   />
                 )}
                 <input
@@ -219,7 +219,7 @@ function QLBH_NEW() {
           <button className="btn btn-primary" onClick={createData}>
             <i
               className="fas fa-plus-circle"
-              style={{ marginRight: "5px" }}
+              style={{ marginRight: '5px' }}
             ></i>
             Tạo bài học
           </button>

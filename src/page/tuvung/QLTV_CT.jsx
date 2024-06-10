@@ -1,14 +1,14 @@
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
-import tuVungApi from "../Api/tuVungApi";
-import baiHocApi from "../Api/baiHocApi";
-import khoaHocApi from "../Api/khoaHocApi";
+import tuVungApi from '../../Api/tuVungApi';
+import baiHocApi from '../../Api/baiHocApi';
+import khoaHocApi from '../../Api/khoaHocApi';
 
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function QLTV_CT() {
   let { id } = useParams();
@@ -19,15 +19,15 @@ function QLTV_CT() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [newTV, setNewTV] = useState("");
-  const [newPhienAm, setNewPhienAm] = useState("");
-  const [newDinhNghia, setNewDinhNghia] = useState("");
-  const [newLoaiTu, setNewLoaiTu] = useState("");
-  const [newChuDe, setNewChuDe] = useState("");
-  const [newVD, setNewVD] = useState("");
-  const [newDNVD, setNewDNVD] = useState("");
-  const [newHinhAnh, setNewHinhAnh] = useState("");
-  const [newCreateAt, setNewCreateAt] = useState("");
+  const [newTV, setNewTV] = useState('');
+  const [newPhienAm, setNewPhienAm] = useState('');
+  const [newDinhNghia, setNewDinhNghia] = useState('');
+  const [newLoaiTu, setNewLoaiTu] = useState('');
+  const [newChuDe, setNewChuDe] = useState('');
+  const [newVD, setNewVD] = useState('');
+  const [newDNVD, setNewDNVD] = useState('');
+  const [newHinhAnh, setNewHinhAnh] = useState('');
+  const [newCreateAt, setNewCreateAt] = useState('');
 
   const [selectedLesson, setSelectedLesson] = useState();
   const [selectedCourse, setSelectedCourse] = useState();
@@ -47,17 +47,17 @@ function QLTV_CT() {
     const fetchKHData = async () => {
       try {
         const response = await khoaHocApi.KhoaHocHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setKhoaHoc(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchKHData();
@@ -67,17 +67,17 @@ function QLTV_CT() {
     const fetchBHData = async () => {
       try {
         const response = await baiHocApi.BaiHocHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setBaiHoc(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchBHData();
@@ -89,10 +89,10 @@ function QLTV_CT() {
         const response = await tuVungApi.TuVungHandler(
           `/${id}`,
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setTuVung(responseData);
           setSelectedLesson(responseData.baiHoc.id);
@@ -107,7 +107,7 @@ function QLTV_CT() {
           setNewCreateAt(responseData.createAt);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchData();
@@ -117,40 +117,40 @@ function QLTV_CT() {
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("baiHoc", selectedLesson);
-      formData.append("tu", newTV);
-      formData.append("phienAm", newPhienAm);
-      formData.append("dinhNghia", newDinhNghia);
-      formData.append("loaiTu", newLoaiTu);
-      formData.append("chuDe", newChuDe);
-      formData.append("viDu", newVD);
-      formData.append("dichNghiaVD", newDNVD);
-      if (typeof newHinhAnh === "object") {
-        formData.append("image", newHinhAnh);
+      formData.append('baiHoc', selectedLesson);
+      formData.append('tu', newTV);
+      formData.append('phienAm', newPhienAm);
+      formData.append('dinhNghia', newDinhNghia);
+      formData.append('loaiTu', newLoaiTu);
+      formData.append('chuDe', newChuDe);
+      formData.append('viDu', newVD);
+      formData.append('dichNghiaVD', newDNVD);
+      if (typeof newHinhAnh === 'object') {
+        formData.append('image', newHinhAnh);
       } else {
         // Nếu newHinhAnh là đường dẫn
-        formData.append("hinhAnh", newHinhAnh);
+        formData.append('hinhAnh', newHinhAnh);
       }
       const currentTime = new Date();
-      formData.append("createAt", currentTime.toISOString());
+      formData.append('createAt', currentTime.toISOString());
 
       const response = await tuVungApi.TuVungHandler(
         `/${id}`,
         formData,
-        "patch",
+        'patch',
         auth.token
       );
       console.log(response);
-      if (response.status === "success") {
-        toast.success("Cập nhật thành công!", {
-          position: "top-center",
+      if (response.status === 'success') {
+        toast.success('Cập nhật thành công!', {
+          position: 'top-center',
           autoClose: 2000,
         });
         setIsUpdating(false);
         setIsLoading(false);
       }
     } catch (error) {
-      console.error("Lỗi khi cập nhật dữ liệu: ", error);
+      console.error('Lỗi khi cập nhật dữ liệu: ', error);
     }
   };
 
@@ -167,16 +167,16 @@ function QLTV_CT() {
       {isLoading && (
         <div
           style={{
-            position: "fixed",
-            top: "0",
-            left: "0",
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(255, 255, 255, 0.7)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "9999",
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: '9999',
           }}
         >
           <div className="spinner-border text-primary" role="status">
@@ -203,7 +203,7 @@ function QLTV_CT() {
             <div className="card-header">
               <h3
                 className="card-title"
-                style={{ color: "#15d442", fontWeight: "bold" }}
+                style={{ color: '#15d442', fontWeight: 'bold' }}
               >
                 Từ vựng ID: {id}
               </h3>
@@ -216,7 +216,7 @@ function QLTV_CT() {
                   >
                     <i
                       className="fas fa-times"
-                      style={{ marginRight: "5px" }}
+                      style={{ marginRight: '5px' }}
                     ></i>
                     Hủy
                   </button>
@@ -229,7 +229,7 @@ function QLTV_CT() {
                   >
                     <i
                       className="fas fa-pencil-alt"
-                      style={{ marginRight: "5px" }}
+                      style={{ marginRight: '5px' }}
                     ></i>
                     Sửa
                   </button>
@@ -239,13 +239,13 @@ function QLTV_CT() {
             <div
               className="card-header"
               style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
             >
-              <a className="card-title" style={{ fontWeight: "bold" }}>
-                Thuộc bài học: {tuVung.baiHoc && tuVung.baiHoc.tenBaiHoc} - ID:{" "}
+              <a className="card-title" style={{ fontWeight: 'bold' }}>
+                Thuộc bài học: {tuVung.baiHoc && tuVung.baiHoc.tenBaiHoc} - ID:{' '}
                 {tuVung.baiHoc && tuVung.baiHoc.id}
               </a>
             </div>
@@ -253,14 +253,14 @@ function QLTV_CT() {
               <table className="table table-striped projects">
                 <thead>
                   <tr>
-                    <th style={{ width: "10%" }}>Từ vựng</th>
-                    <th style={{ width: "10%" }}>Phiên âm</th>
-                    <th style={{ width: "10%" }}>Định nghĩa</th>
-                    <th style={{ width: "15%" }}>Loại từ</th>
-                    <th style={{ width: "10%" }}>Chủ đề</th>
-                    <th style={{ width: "15%" }}>Ví dụ</th>
-                    <th style={{ width: "20%" }}>Dịch nghĩa ví dụ</th>
-                    <th style={{ width: "10%" }} className="text-center">
+                    <th style={{ width: '10%' }}>Từ vựng</th>
+                    <th style={{ width: '10%' }}>Phiên âm</th>
+                    <th style={{ width: '10%' }}>Định nghĩa</th>
+                    <th style={{ width: '15%' }}>Loại từ</th>
+                    <th style={{ width: '10%' }}>Chủ đề</th>
+                    <th style={{ width: '15%' }}>Ví dụ</th>
+                    <th style={{ width: '20%' }}>Dịch nghĩa ví dụ</th>
+                    <th style={{ width: '10%' }} className="text-center">
                       Ngày tạo
                     </th>
                   </tr>
@@ -283,7 +283,7 @@ function QLTV_CT() {
                       <img
                         src={tuVung.hinhAnh}
                         alt="Hình ảnh"
-                        style={{ maxWidth: "100%", height: "auto" }}
+                        style={{ maxWidth: '100%', height: 'auto' }}
                       />
                     </td>
                   </tr>
@@ -400,13 +400,13 @@ function QLTV_CT() {
                   {newHinhAnh && (
                     <img
                       src={
-                        typeof newHinhAnh === "object"
+                        typeof newHinhAnh === 'object'
                           ? URL.createObjectURL(newHinhAnh)
                           : newHinhAnh
                       }
                       alt="Hình ảnh"
                       className="img-thumbnail mb-2"
-                      style={{ maxHeight: "200px" }}
+                      style={{ maxHeight: '200px' }}
                     />
                   )}
                   <input
@@ -424,7 +424,7 @@ function QLTV_CT() {
                   <button className="btn btn-primary" onClick={updateData}>
                     <i
                       className="fas fa-upload"
-                      style={{ marginRight: "5px" }}
+                      style={{ marginRight: '5px' }}
                     ></i>
                     Cập nhật
                   </button>

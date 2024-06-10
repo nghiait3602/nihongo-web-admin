@@ -1,79 +1,79 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import userApi from "../Api/userApi";
+import userApi from '../../Api/userApi';
 
 function QLUSER_NEW() {
   const auth = useSelector(authSelector);
   const [isLoading, setIsLoading] = useState(false);
 
   const [user, setUser] = useState([]);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("admin");
-  const [ngaySinh, setNgaySinh] = useState("");
-  const [password, setPassword]= useState("");
-  const [passwordConfirm, setPasswordConfirm]= useState("");
-  const [photo, setPhoto] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('admin');
+  const [ngaySinh, setNgaySinh] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [photo, setPhoto] = useState('');
 
   const createData = async (event) => {
     event.preventDefault();
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("name", name);
-      formData.append("email", email);
-      formData.append("role", role);
-      formData.append("password", password);
-      formData.append("passwordConfirm", passwordConfirm);
-      if(password !== passwordConfirm){
-        toast.warning("Xác nhận mật khẩu không đúng vui lòng nhập lại", {
-          position: "top-center",
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('role', role);
+      formData.append('password', password);
+      formData.append('passwordConfirm', passwordConfirm);
+      if (password !== passwordConfirm) {
+        toast.warning('Xác nhận mật khẩu không đúng vui lòng nhập lại', {
+          position: 'top-center',
           autoClose: 2000,
         });
         setIsLoading(false);
         return;
       }
-      if (ngaySinh !== "" && validateDateFormat(ngaySinh)) {
-        formData.append("ngaySinh", ngaySinh);
+      if (ngaySinh !== '' && validateDateFormat(ngaySinh)) {
+        formData.append('ngaySinh', ngaySinh);
       } else {
-        toast.warning("Ngày sinh không đúng vui lòng nhập lại", {
-          position: "top-center",
+        toast.warning('Ngày sinh không đúng vui lòng nhập lại', {
+          position: 'top-center',
           autoClose: 2000,
         });
         setIsLoading(false);
         return;
       }
-      if (typeof photo === "object") {
-        formData.append("image", photo);
+      if (typeof photo === 'object') {
+        formData.append('image', photo);
       } else {
-        formData.append("photo", photo);
+        formData.append('photo', photo);
       }
       const response = await userApi.UserHandler(
         `/`,
         formData,
-        "post",
+        'post',
         auth.token
       );
       console.log(response);
-      if (response.status === "success") {
-        toast.success("Tạo user thành công!", {
-          position: "top-center",
+      if (response.status === 'success') {
+        toast.success('Tạo user thành công!', {
+          position: 'top-center',
           autoClose: 2000,
         });
         setIsLoading(false);
         setTimeout(() => {
-          window.location.href = "/qluser";
+          window.location.href = '/qluser';
         }, 2000);
       }
     } catch (error) {
       setIsLoading(false);
-      console.error("Lỗi dữ liệu: ", error);
+      console.error('Lỗi dữ liệu: ', error);
       toast.error(`Tạo user thất bại!\nVui lòng kiểm tra lại thông tin.`, {
-        position: "top-center",
+        position: 'top-center',
         autoClose: 2000,
       });
     }
@@ -97,16 +97,16 @@ function QLUSER_NEW() {
       {isLoading && (
         <div
           style={{
-            position: "fixed",
-            top: "0",
-            left: "0",
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(255, 255, 255, 0.7)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "9999",
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: '9999',
           }}
         >
           <div className="spinner-border text-primary" role="status">
@@ -154,13 +154,13 @@ function QLUSER_NEW() {
                 {photo && (
                   <img
                     src={
-                      typeof photo === "object"
+                      typeof photo === 'object'
                         ? URL.createObjectURL(photo)
                         : photo
                     }
                     alt="Hình ảnh cách viết"
                     className="img-thumbnail mb-2"
-                    style={{ maxHeight: "200px" }}
+                    style={{ maxHeight: '200px' }}
                   />
                 )}
               </div>
@@ -220,7 +220,7 @@ function QLUSER_NEW() {
                 />
               </div>
               <button type="submit" className="btn btn-primary">
-                <i className="fas fa-upload" style={{ marginRight: "5px" }}></i>
+                <i className="fas fa-upload" style={{ marginRight: '5px' }}></i>
                 Tạo admin
               </button>
             </form>

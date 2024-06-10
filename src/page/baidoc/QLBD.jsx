@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { authSelector } from '../redux/reducers/authReducer';
+import { authSelector } from '../../redux/reducers/authReducer';
 import { ToastContainer, toast } from 'react-toastify';
-import baiDocApi from '../Api/baidocApi';
+import baiDocApi from '../../Api/baidocApi';
 function QLBD() {
   const auth = useSelector(authSelector);
   const [baiDoc, setBaiDoc] = useState([]);

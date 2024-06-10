@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import userApi from "../Api/userApi";
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { Link } from "react-router-dom";
+import userApi from '../../Api/userApi';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { Link } from 'react-router-dom';
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function QLUSER() {
   const auth = useSelector(authSelector);
   const [user, setUser] = useState([]);
@@ -16,17 +16,17 @@ function QLUSER() {
     const fetchData = async () => {
       try {
         const response = await userApi.UserHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setUser(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchData();
@@ -34,19 +34,19 @@ function QLUSER() {
 
   const deleteData = async (id) => {
     try {
-      await userApi.UserHandler(`/${id}`, null, "delete", auth.token);
+      await userApi.UserHandler(`/${id}`, null, 'delete', auth.token);
       setReloadPage(!reloadPage);
     } catch (error) {
-      console.error("Lỗi khi xóa user: ", error);
+      console.error('Lỗi khi xóa user: ', error);
       setReloadPage(!reloadPage);
     }
   };
 
   const xacNhanDel = (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa user này không?")) {
+    if (window.confirm('Bạn có chắc chắn muốn xóa user này không?')) {
       deleteData(id);
-      toast.success("Xóa user thành công!", {
-        position: "top-center",
+      toast.success('Xóa user thành công!', {
+        position: 'top-center',
         autoClose: 2000,
       });
     }
@@ -57,9 +57,9 @@ function QLUSER() {
       <Link
         to={`/qluser/chi-tiet-user/${user._id}`}
         className="btn btn-primary btn-sm"
-        style={{ marginRight: "5px" }}
+        style={{ marginRight: '5px' }}
       >
-        <i className="fas fa-folder" style={{ marginRight: "5px" }}></i>
+        <i className="fas fa-folder" style={{ marginRight: '5px' }}></i>
         Xem chi tiết
       </Link>
     );
@@ -90,11 +90,11 @@ function QLUSER() {
               <Link
                 to={`/qluser/tao-moi`}
                 className="btn btn-warning btn-sm"
-                style={{ marginRight: "5px" }}
+                style={{ marginRight: '5px' }}
               >
                 <i
                   className="fas fa-plus-circle"
-                  style={{ marginRight: "5px" }}
+                  style={{ marginRight: '5px' }}
                 ></i>
                 Thêm admin
               </Link>
@@ -113,19 +113,19 @@ function QLUSER() {
             <table className="table table-striped projects">
               <thead>
                 <tr>
-                  <th style={{ width: "1%" }}>STT</th>
-                  <th style={{ width: "10%" }}>Name</th>
-                  <th style={{ width: "10%" }}>Avatar</th>
-                  <th style={{ width: "10%" }}>Email</th>
-                  <th style={{ width: "10%" }} className="text-center">
+                  <th style={{ width: '1%' }}>STT</th>
+                  <th style={{ width: '10%' }}>Name</th>
+                  <th style={{ width: '10%' }}>Avatar</th>
+                  <th style={{ width: '10%' }}>Email</th>
+                  <th style={{ width: '10%' }} className="text-center">
                     Trạng thái
                   </th>
-                  <th style={{ width: "10%" }}></th>
+                  <th style={{ width: '10%' }}></th>
                 </tr>
               </thead>
               <tbody>
                 {user
-                  .filter((user) => user.role === "admin")
+                  .filter((user) => user.role === 'admin')
                   .map((item, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
@@ -160,7 +160,7 @@ function QLUSER() {
                         >
                           <i
                             className="fas fa-trash"
-                            style={{ marginRight: "5px" }}
+                            style={{ marginRight: '5px' }}
                           ></i>
                           Xóa
                         </a>
@@ -189,19 +189,19 @@ function QLUSER() {
             <table className="table table-striped projects">
               <thead>
                 <tr>
-                  <th style={{ width: "1%" }}>STT</th>
-                  <th style={{ width: "10%" }}>Name</th>
-                  <th style={{ width: "10%" }}>Avatar</th>
-                  <th style={{ width: "10%" }}>Email</th>
-                  <th style={{ width: "10%" }} className="text-center">
+                  <th style={{ width: '1%' }}>STT</th>
+                  <th style={{ width: '10%' }}>Name</th>
+                  <th style={{ width: '10%' }}>Avatar</th>
+                  <th style={{ width: '10%' }}>Email</th>
+                  <th style={{ width: '10%' }} className="text-center">
                     Trạng thái
                   </th>
-                  <th style={{ width: "10%" }}></th>
+                  <th style={{ width: '10%' }}></th>
                 </tr>
               </thead>
               <tbody>
                 {user
-                  .filter((user) => user.role === "user")
+                  .filter((user) => user.role === 'user')
                   .map((item, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
@@ -236,7 +236,7 @@ function QLUSER() {
                         >
                           <i
                             className="fas fa-trash"
-                            style={{ marginRight: "5px" }}
+                            style={{ marginRight: '5px' }}
                           ></i>
                           Xóa
                         </a>

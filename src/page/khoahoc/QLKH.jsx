@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import khoaHocApi from "../Api/khoaHocApi";
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { ToastContainer, toast } from "react-toastify";
-import { Link } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
+import khoaHocApi from '../../Api/khoaHocApi';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { ToastContainer, toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 
 function QLKH() {
   const auth = useSelector(authSelector);
@@ -16,17 +16,17 @@ function QLKH() {
     const fetchData = async () => {
       try {
         const response = await khoaHocApi.KhoaHocHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setKhoaHoc(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchData();
@@ -37,9 +37,9 @@ function QLKH() {
       <Link
         to={`/qlkh/chi-tiet-kh/${khoahoc._id}`}
         className="btn btn-primary btn-sm"
-        style={{ marginRight: "5px" }}
+        style={{ marginRight: '5px' }}
       >
-        <i className="fas fa-folder" style={{ marginRight: "5px" }}></i>
+        <i className="fas fa-folder" style={{ marginRight: '5px' }}></i>
         Xem chi tiết
       </Link>
     );
@@ -47,18 +47,18 @@ function QLKH() {
 
   const deleteData = async (id) => {
     try {
-      await khoaHocApi.KhoaHocHandler(`/${id}`, null, "delete", auth.token);
+      await khoaHocApi.KhoaHocHandler(`/${id}`, null, 'delete', auth.token);
       setReloadPage(!reloadPage);
     } catch (error) {
-      console.error("Lỗi khi xóa khóa học: ", error);
+      console.error('Lỗi khi xóa khóa học: ', error);
       setReloadPage(!reloadPage);
     }
   };
   const xacNhanDel = (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa khóa học này không?")) {
+    if (window.confirm('Bạn có chắc chắn muốn xóa khóa học này không?')) {
       deleteData(id);
-      toast.success("Xóa khóa học thành công!", {
-        position: "top-center",
+      toast.success('Xóa khóa học thành công!', {
+        position: 'top-center',
         autoClose: 2000,
       });
     }
@@ -91,14 +91,14 @@ function QLKH() {
             <table className="table table-striped projects">
               <thead>
                 <tr>
-                  <th style={{ width: "1%" }}>STT</th>
-                  <th style={{ width: "20%" }}>Khóa học</th>
-                  <th style={{ width: "20%" }}>Icon</th>
+                  <th style={{ width: '1%' }}>STT</th>
+                  <th style={{ width: '20%' }}>Khóa học</th>
+                  <th style={{ width: '20%' }}>Icon</th>
                   <th className="text-center">Số người đang hoặc đã học</th>
-                  <th style={{ width: "8%" }} className="text-center">
+                  <th style={{ width: '8%' }} className="text-center">
                     Trạng thái
                   </th>
-                  <th style={{ width: "20%" }}></th>
+                  <th style={{ width: '20%' }}></th>
                 </tr>
               </thead>
               <tbody>
@@ -129,7 +129,10 @@ function QLKH() {
                       ) : (
                         <span>0</span>
                       )}
-                      <i style={{ width: "15%" }} className="nav-icon fas fa-user-alt" />
+                      <i
+                        style={{ width: '15%' }}
+                        className="nav-icon fas fa-user-alt"
+                      />
                       <br />
                     </td>
                     <td className="project-state">

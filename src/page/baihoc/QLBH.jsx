@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import baiHocApi from "../Api/baiHocApi";
-import khoaHocApi from "../Api/khoaHocApi";
-import tienTrinhApi from "../Api/tienTrinhApi";
+import baiHocApi from '../../Api/baiHocApi';
+import khoaHocApi from '../../Api/khoaHocApi';
+import tienTrinhApi from '../../Api/tienTrinhApi';
 
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { Link } from 'react-router-dom';
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function QLBH() {
   const auth = useSelector(authSelector);
@@ -19,8 +19,8 @@ function QLBH() {
 
   const [idBaiHocTR, setIdBaiHocTR] = useState([]);
 
-  const [selectedCourses, setSelectedCourses] = useState(["0"]);
-  const [selectedText, setSelectedText] = useState("Tất cả khóa học");
+  const [selectedCourses, setSelectedCourses] = useState(['0']);
+  const [selectedText, setSelectedText] = useState('Tất cả khóa học');
 
   const chonKhoaHoc = (e) => {
     const selectedIds = Array.from(
@@ -39,18 +39,18 @@ function QLBH() {
     const fetchKHData = async () => {
       try {
         const response = await tienTrinhApi.TienTrinhHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           const lessonIds = responseData.map((lesson) => lesson.baiHoc.id);
           setIdBaiHocTR(lessonIds);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchKHData();
@@ -70,17 +70,17 @@ function QLBH() {
     const fetchKHData = async () => {
       try {
         const response = await khoaHocApi.KhoaHocHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setKhoaHoc(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchKHData();
@@ -89,24 +89,24 @@ function QLBH() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let url = "/";
-        if (selectedCourses.includes("0")) {
-          url = "/";
+        let url = '/';
+        if (selectedCourses.includes('0')) {
+          url = '/';
         } else {
           url += `?khoaHoc=${selectedCourses}`;
         }
         const response = await baiHocApi.BaiHocHandler(
           url,
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setBaiHoc(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchData();
@@ -114,19 +114,19 @@ function QLBH() {
 
   const deleteData = async (id) => {
     try {
-      await baiHocApi.BaiHocHandler(`/${id}`, null, "delete", auth.token);
+      await baiHocApi.BaiHocHandler(`/${id}`, null, 'delete', auth.token);
       setReloadPage(!reloadPage);
     } catch (error) {
-      console.error("Lỗi khi xóa bài học: ", error);
+      console.error('Lỗi khi xóa bài học: ', error);
       setReloadPage(!reloadPage);
     }
   };
 
   const xacNhanDel = (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa bài học này không?")) {
+    if (window.confirm('Bạn có chắc chắn muốn xóa bài học này không?')) {
       deleteData(id);
-      toast.success("Xóa bài thành công!", {
-        position: "top-center",
+      toast.success('Xóa bài thành công!', {
+        position: 'top-center',
         autoClose: 2000,
       });
     }
@@ -137,9 +137,9 @@ function QLBH() {
       <Link
         to={`/qlbh/chi-tiet-bai-hoc/${lesson.id}`}
         className="btn btn-primary btn-sm"
-        style={{ marginRight: "5px" }}
+        style={{ marginRight: '5px' }}
       >
-        <i className="fas fa-folder" style={{ marginRight: "5px" }}></i>
+        <i className="fas fa-folder" style={{ marginRight: '5px' }}></i>
         Xem chi tiết
       </Link>
     );
@@ -169,11 +169,11 @@ function QLBH() {
             <Link
               to={`/qlbh/tao-moi`}
               className="btn btn-warning btn-sm"
-              style={{ marginRight: "5px" }}
+              style={{ marginRight: '5px' }}
             >
               <i
                 className="fas fa-plus-circle"
-                style={{ marginRight: "5px" }}
+                style={{ marginRight: '5px' }}
               ></i>
               Thêm bài học
             </Link>
@@ -221,14 +221,14 @@ function QLBH() {
             <table className="table table-striped projects">
               <thead>
                 <tr>
-                  <th style={{ width: "1%" }}>STT</th>
-                  <th style={{ width: "30%" }}>Tên bài học</th>
-                  <th style={{ width: "15%" }}>Hình ảnh</th>
+                  <th style={{ width: '1%' }}>STT</th>
+                  <th style={{ width: '30%' }}>Tên bài học</th>
+                  <th style={{ width: '15%' }}>Hình ảnh</th>
                   <th>Số người đã học</th>
-                  <th style={{ width: "8%" }} className="text-center">
+                  <th style={{ width: '8%' }} className="text-center">
                     Trạng thái
                   </th>
-                  <th style={{ width: "20%" }}></th>
+                  <th style={{ width: '20%' }}></th>
                 </tr>
               </thead>
               <tbody>
@@ -249,7 +249,7 @@ function QLBH() {
                             alt="Avatar"
                             className="table-avatar"
                             src={item.hinhAnh}
-                            style={{ width: "60px", height: "auto" }}
+                            style={{ width: '60px', height: 'auto' }}
                           />
                         </li>
                       </ul>
@@ -281,7 +281,7 @@ function QLBH() {
                       >
                         <i
                           className="fas fa-trash"
-                          style={{ marginRight: "5px" }}
+                          style={{ marginRight: '5px' }}
                         ></i>
                         Xóa
                       </a>
