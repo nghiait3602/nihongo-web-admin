@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import kanjiApi from "../Api/kanjiApi";
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { Link } from "react-router-dom";
+import kanjiApi from '../../Api/kanjiApi';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { Link } from 'react-router-dom';
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function QLKanji() {
   const auth = useSelector(authSelector);
   const [kanji, setKanji] = useState([]);
@@ -16,17 +16,17 @@ function QLKanji() {
     const fetchData = async () => {
       try {
         const response = await kanjiApi.KanjiHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setKanji(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchData();
@@ -34,19 +34,19 @@ function QLKanji() {
 
   const deleteData = async (id) => {
     try {
-      await kanjiApi.KanjiHandler(`/${id}`, null, "delete", auth.token);
+      await kanjiApi.KanjiHandler(`/${id}`, null, 'delete', auth.token);
       setReloadPage(!reloadPage);
     } catch (error) {
-      console.error("Lỗi khi xóa kanji: ", error);
+      console.error('Lỗi khi xóa kanji: ', error);
       setReloadPage(!reloadPage);
     }
   };
 
   const xacNhanDel = (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa hán tự này không?")) {
+    if (window.confirm('Bạn có chắc chắn muốn xóa hán tự này không?')) {
       deleteData(id);
-      toast.success("Xóa hán tự thành công!", {
-        position: "top-center",
+      toast.success('Xóa hán tự thành công!', {
+        position: 'top-center',
         autoClose: 2000,
       });
     }
@@ -57,9 +57,9 @@ function QLKanji() {
       <Link
         to={`/qlkanji/chi-tiet-kanji/${kanji._id}`}
         className="btn btn-primary btn-sm"
-        style={{ marginRight: "5px" }}
+        style={{ marginRight: '5px' }}
       >
-        <i className="fas fa-folder" style={{ marginRight: "5px" }}></i>
+        <i className="fas fa-folder" style={{ marginRight: '5px' }}></i>
         Xem chi tiết
       </Link>
     );
@@ -89,11 +89,11 @@ function QLKanji() {
             <Link
               to={`/qlkanji/tao-moi`}
               className="btn btn-warning btn-sm"
-              style={{ marginRight: "5px" }}
+              style={{ marginRight: '5px' }}
             >
               <i
                 className="fas fa-plus-circle"
-                style={{ marginRight: "5px" }}
+                style={{ marginRight: '5px' }}
               ></i>
               Thêm kanji
             </Link>
@@ -120,14 +120,14 @@ function QLKanji() {
             <table className="table table-striped projects">
               <thead>
                 <tr>
-                  <th style={{ width: "1%" }}>STT</th>
-                  <th style={{ width: "20%" }}>Hán tự</th>
-                  <th style={{ width: "30%" }}>Cách viết</th>
+                  <th style={{ width: '1%' }}>STT</th>
+                  <th style={{ width: '20%' }}>Hán tự</th>
+                  <th style={{ width: '30%' }}>Cách viết</th>
                   <th>Hán việt</th>
-                  <th style={{ width: "8%" }} className="text-center">
+                  <th style={{ width: '8%' }} className="text-center">
                     Trạng thái
                   </th>
-                  <th style={{ width: "20%" }}></th>
+                  <th style={{ width: '20%' }}></th>
                 </tr>
               </thead>
               <tbody>
@@ -160,7 +160,7 @@ function QLKanji() {
                       <span className="badge badge-success">Đang mở</span>
                     </td>
                     <td className="project-actions text-right">
-                    <KanjiItem key={item._id} kanji={item} />
+                      <KanjiItem key={item._id} kanji={item} />
 
                       <a
                         className="btn btn-danger btn-sm"
@@ -168,7 +168,7 @@ function QLKanji() {
                       >
                         <i
                           className="fas fa-trash"
-                          style={{ marginRight: "5px" }}
+                          style={{ marginRight: '5px' }}
                         ></i>
                         Xóa
                       </a>

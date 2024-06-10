@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { ToastContainer, toast } from "react-toastify";
-import { Link } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { ToastContainer, toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 
-import khoaHocApi from "../Api/khoaHocApi";
+import khoaHocApi from '../../Api/khoaHocApi';
 
 function QLKH_CT() {
   let { id } = useParams();
@@ -16,13 +16,13 @@ function QLKH_CT() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [tenKhoahoc, settenKhoahoc] = useState("");
-  const [moTa, setMoTa] = useState("");
-  const [capDo, setCapDo] = useState("");
-  const [hinhAnh, setHinhAnh] = useState("");
+  const [tenKhoahoc, settenKhoahoc] = useState('');
+  const [moTa, setMoTa] = useState('');
+  const [capDo, setCapDo] = useState('');
+  const [hinhAnh, setHinhAnh] = useState('');
   const [dsNguoiHoc, setDSNguoiHoc] = useState([]);
   const [dsBaiHoc, setDSBaiHoc] = useState([]);
-  const [newCreateAt, setNewCreateAt] = useState("");
+  const [newCreateAt, setNewCreateAt] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,10 +30,10 @@ function QLKH_CT() {
         const response = await khoaHocApi.KhoaHocHandler(
           `/${id}`,
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setKhoaHoc(responseData);
           settenKhoahoc(responseData.tenKhoahoc);
@@ -45,7 +45,7 @@ function QLKH_CT() {
           setNewCreateAt(responseData.createAt);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchData();
@@ -55,32 +55,32 @@ function QLKH_CT() {
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("tenKhoahoc", tenKhoahoc);
-      formData.append("moTa", moTa);
-      formData.append("capDo", capDo);
-      if (typeof photo === "object") {
-        formData.append("image", hinhAnh);
+      formData.append('tenKhoahoc', tenKhoahoc);
+      formData.append('moTa', moTa);
+      formData.append('capDo', capDo);
+      if (typeof photo === 'object') {
+        formData.append('image', hinhAnh);
       } else {
-        formData.append("hinhAnh", hinhAnh);
+        formData.append('hinhAnh', hinhAnh);
       }
 
       const response = await khoaHocApi.KhoaHocHandler(
         `/${id}`,
         formData,
-        "patch",
+        'patch',
         auth.token
       );
       console.log(response);
-      if (response.status === "success") {
-        toast.success("Cập nhật thành công!", {
-          position: "top-center",
+      if (response.status === 'success') {
+        toast.success('Cập nhật thành công!', {
+          position: 'top-center',
           autoClose: 2000,
         });
         setIsUpdating(false);
         setIsLoading(false);
       }
     } catch (error) {
-      console.error("Lỗi khi cập nhật dữ liệu: ", error);
+      console.error('Lỗi khi cập nhật dữ liệu: ', error);
     }
   };
 
@@ -97,16 +97,16 @@ function QLKH_CT() {
       {isLoading && (
         <div
           style={{
-            position: "fixed",
-            top: "0",
-            left: "0",
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(255, 255, 255, 0.7)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "9999",
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: '9999',
           }}
         >
           <div className="spinner-border text-primary" role="status">
@@ -162,13 +162,13 @@ function QLKH_CT() {
               {hinhAnh && (
                 <img
                   src={
-                    typeof hinhAnh === "object"
+                    typeof hinhAnh === 'object'
                       ? URL.createObjectURL(hinhAnh)
                       : hinhAnh
                   }
                   alt="Hình ảnh khóa học"
                   className="img-thumbnail mb-2"
-                  style={{ maxHeight: "200px" }}
+                  style={{ maxHeight: '200px' }}
                 />
               )}
             </div>
@@ -251,9 +251,7 @@ function QLKH_CT() {
                 ) : (
                   dsNguoiHoc.map((nguoihoc) => (
                     <li key={nguoihoc.id} className="list-group-item">
-                      <Link
-                        to={`/qluser/chi-tiet-user/${nguoihoc.id}`}
-                      >
+                      <Link to={`/qluser/chi-tiet-user/${nguoihoc.id}`}>
                         <span>{`${nguoihoc.name} - ${nguoihoc.email}`}</span>
                       </Link>
                     </li>
@@ -294,9 +292,7 @@ function QLKH_CT() {
                 ) : (
                   dsBaiHoc.map((baihoc) => (
                     <li key={baihoc.id} className="list-group-item">
-                      <Link
-                        to={`/qlbh/chi-tiet-bai-hoc/${baihoc.id}`}
-                      >
+                      <Link to={`/qlbh/chi-tiet-bai-hoc/${baihoc.id}`}>
                         <span>{`${baihoc.tenBaiHoc} - ${baihoc.mucTieu}`}</span>
                       </Link>
                     </li>
@@ -309,7 +305,7 @@ function QLKH_CT() {
                 <button className="btn btn-primary" onClick={updateData}>
                   <i
                     className="fas fa-upload"
-                    style={{ marginRight: "5px" }}
+                    style={{ marginRight: '5px' }}
                   ></i>
                   Cập nhật
                 </button>
@@ -320,7 +316,7 @@ function QLKH_CT() {
                 >
                   <i
                     className="fas fa-times"
-                    style={{ marginRight: "5px" }}
+                    style={{ marginRight: '5px' }}
                   ></i>
                   Hủy
                 </button>

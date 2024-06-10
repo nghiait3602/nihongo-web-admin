@@ -1,23 +1,24 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { authSelector } from '../redux/reducers/authReducer';
+import { authSelector } from '../../redux/reducers/authReducer';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import baiDocApi from '../Api/baidocApi';
-import baiHocApi from '../Api/baiHocApi';
-import khoaHocApi from '../Api/khoaHocApi';
-function QLBD_NEW() {
+import nguPhapApi from '../../Api/nguPhapApi';
+import baiHocApi from '../../Api/baiHocApi';
+import khoaHocApi from '../../Api/khoaHocApi';
+
+function QLNP_NEW() {
   const auth = useSelector(authSelector);
-  const [baiHoc, setBaiHoc] = useState([]);
-  const [khoaHoc, setKhoaHoc] = useState([]);
-
   const [isLoading, setIsLoading] = useState(false);
-
-  const [tenBaiDoc, setTenBaiDoc] = useState('');
+  const [cauTruc, setCauTruc] = useState('');
   const [tinhHuong, setTinhHuong] = useState('');
-  const [vanBanTiengNhat, setVanBanTiengNhat] = useState('');
-  const [vanBanDich, setVanBanDich] = useState('');
+  const [newDinhNghia, setNewDinhNghia] = useState('');
+  const [newVD, setNewVD] = useState('');
+
+  const [khoaHoc, setKhoaHoc] = useState([]);
+  const [baiHoc, setBaiHoc] = useState([]);
+
   const [selectedLesson, setSelectedLesson] = useState();
   const [selectedCourse, setSelectedCourse] = useState();
 
@@ -26,10 +27,12 @@ function QLBD_NEW() {
     setSelectedCourse(courseId);
     setSelectedLesson(null);
   };
+
   const handleLessonChange = (event) => {
     const lessonId = event.target.value;
     setSelectedLesson(lessonId);
   };
+
   useEffect(() => {
     const fetchKHData = async () => {
       try {
@@ -69,18 +72,19 @@ function QLBD_NEW() {
     };
     fetchBHData();
   }, []);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       setIsLoading(true);
       const reqBody = {
-        tenBaiDoc: tenBaiDoc,
-        tinhHuong: tinhHuong,
-        dichNghia: vanBanDich,
-        vanBanTiengNhat: vanBanTiengNhat,
+        cauTruc,
+        tinhHuong,
+        dinhNghia: newDinhNghia,
+        viDu: newVD,
         baiHoc: selectedLesson,
       };
-      const response = await baiDocApi.BaiDocHandler(
+      const response = await nguPhapApi.NguPhapHandler(
         '/',
         reqBody,
         'post',
@@ -88,19 +92,19 @@ function QLBD_NEW() {
       );
       console.log(response);
       if (response.status === 'success') {
-        toast.success('Tạo mới bài đọc thành công!', {
+        toast.success('Tạo mới ngữ pháp thành công!', {
           position: 'top-center',
           autoClose: 2000,
         });
         setIsLoading(false);
         setTimeout(() => {
-          window.location.href = '/qlbd';
+          window.location.href = '/qlnp';
         }, 2000);
       }
     } catch (error) {
       setIsLoading(false);
       console.error('Lỗi dữ liệu: ', error);
-      toast.error(`Tạo bài đọc thất bại!\nVui lòng kiểm tra lại thông tin.`, {
+      toast.error(`Tạo ngữ pháp thất bại!\nVui lòng kiểm tra lại thông tin.`, {
         position: 'top-center',
         autoClose: 2000,
       });
@@ -126,7 +130,7 @@ function QLBD_NEW() {
           }}
         >
           <div className="spinner-border text-primary" role="status">
-            <span className="sr-only">Updating...</span>
+            <span className="sr-only">Creating...</span>
           </div>
         </div>
       )}
@@ -134,14 +138,14 @@ function QLBD_NEW() {
         <div className="container-fluid">
           <div className="row mb-2">
             <div className="col-sm-6">
-              <h1>Chi tiết bài đọc</h1>
+              <h1>Tạo ngữ pháp</h1>
             </div>
             <div className="col-sm-6">
               <ol className="breadcrumb float-sm-right">
                 <li className="breadcrumb-item">
-                  <a href="/qlbd">Tất cả bài đọc</a>
+                  <a href="/qlbt">Tất cả ngữ pháp</a>
                 </li>
-                <li className="breadcrumb-item active">Chi tiết bài đọc</li>
+                <li className="breadcrumb-item active">Tạo ngữ pháp</li>
               </ol>
             </div>
           </div>
@@ -149,61 +153,52 @@ function QLBD_NEW() {
 
         <div className="card card-primary">
           <div className="card-header">
-            <div className="card-tools">
-              <button
-                type="button"
-                className="btn btn-tool"
-                data-card-widget="collapse"
-                title="Collapse"
-              >
-                <i className="fas fa-minus" />
-              </button>
-            </div>
+            <h3 className="card-title">Thông tin ngữ pháp mới</h3>
           </div>
           <div className="card-body">
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="inputName">Tên Bài Đọc</label>
+                <label htmlFor="inputName">Cấu trúc ngữ pháp mới</label>
                 <input
                   type="text"
                   id="inputName"
                   className="form-control"
-                  placeholder="Tìm hiểu tiềng Nhật"
-                  value={tenBaiDoc}
-                  onChange={(e) => setTenBaiDoc(e.target.value)}
+                  value={cauTruc}
+                  onChange={(e) => setCauTruc(e.target.value)}
+                  required
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="inputName">Tình Huống</label>
-                <input
+                <label htmlFor="inputName">Tình huống mới</label>
+                <textarea
                   type="text"
                   id="inputName"
                   className="form-control"
-                  value={tinhHuong}
-                  placeholder="Xin Chào"
                   onChange={(e) => setTinhHuong(e.target.value)}
+                  value={tinhHuong}
+                  required
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="inputDescription">Bài đọc</label>
+                <label htmlFor="inputName">Định nghĩa mới</label>
                 <textarea
-                  id="inputDescription"
+                  type="text"
+                  id="inputName"
                   className="form-control"
-                  rows={4}
-                  placeholder="おはよう"
-                  onChange={(e) => setVanBanTiengNhat(e.target.value)}
-                  value={vanBanTiengNhat}
+                  onChange={(e) => setNewDinhNghia(e.target.value)}
+                  value={newDinhNghia}
+                  required
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="inputDescription">Văn bản dịch nghĩa</label>
+                <label htmlFor="inputName">Ví dụ mới</label>
                 <textarea
-                  id="inputDescription"
+                  type="text"
+                  id="inputName"
                   className="form-control"
-                  placeholder="Xin chào"
-                  rows={4}
-                  onChange={(e) => setVanBanDich(e.target.value)}
-                  value={vanBanDich}
+                  onChange={(e) => setNewVD(e.target.value)}
+                  value={newVD}
+                  required
                 />
               </div>
               <div className="form-group">
@@ -232,6 +227,7 @@ function QLBD_NEW() {
                     value={selectedCourse}
                     onChange={handleCourseChange}
                   >
+                    {/* Render lựa chon dựa theo khóa hoc */}
                     {khoaHoc.map((course) => (
                       <option key={course._id} value={course._id}>
                         {course.tenKhoahoc}
@@ -273,4 +269,4 @@ function QLBD_NEW() {
   );
 }
 
-export default QLBD_NEW;
+export default QLNP_NEW;

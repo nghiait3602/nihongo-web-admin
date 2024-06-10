@@ -1,13 +1,11 @@
-
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import baiHocApi from "../Api/baiHocApi";
-import khoaHocApi from "../Api/khoaHocApi";
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import baiHocApi from '../../Api/baiHocApi';
+import khoaHocApi from '../../Api/khoaHocApi';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function QLBH_CT() {
   let { id } = useParams();
@@ -18,13 +16,11 @@ function QLBH_CT() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-
-  const [newName, setNewName] = useState("");
-  const [newMucTieu, setNewMucTieu] = useState("");
-  const [newNoiDung, setNewNoiDung] = useState("");
-  const [newHinhAnh, setNewHinhAnh] = useState("");
-  const [newCreateAt, setNewCreateAt] = useState("");
-
+  const [newName, setNewName] = useState('');
+  const [newMucTieu, setNewMucTieu] = useState('');
+  const [newNoiDung, setNewNoiDung] = useState('');
+  const [newHinhAnh, setNewHinhAnh] = useState('');
+  const [newCreateAt, setNewCreateAt] = useState('');
 
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedText, setSelectedText] = useState();
@@ -46,17 +42,17 @@ function QLBH_CT() {
     const fetchKHData = async () => {
       try {
         const response = await khoaHocApi.KhoaHocHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setKhoaHoc(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchKHData();
@@ -140,16 +136,16 @@ function QLBH_CT() {
       {isLoading && (
         <div
           style={{
-            position: "fixed",
-            top: "0",
-            left: "0",
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(255, 255, 255, 0.7)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "9999",
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: '9999',
           }}
         >
           <div className="spinner-border text-primary" role="status">
@@ -174,10 +170,9 @@ function QLBH_CT() {
           </div>
           <div className="card">
             <div className="card-header">
-
               <h3
                 className="card-title"
-                style={{ color: "#15d442", fontWeight: "bold" }}
+                style={{ color: '#15d442', fontWeight: 'bold' }}
               >
                 Bài học ID: {id}
               </h3>

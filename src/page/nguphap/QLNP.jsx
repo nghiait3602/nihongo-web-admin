@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import nguPhapApi from "../Api/nguPhapApi";
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { Link } from "react-router-dom";
+import nguPhapApi from '../../Api/nguPhapApi';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { Link } from 'react-router-dom';
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function QLNP() {
   const auth = useSelector(authSelector);
@@ -17,17 +17,17 @@ function QLNP() {
     const fetchData = async () => {
       try {
         const response = await nguPhapApi.NguPhapHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setNguPhap(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchData();
@@ -35,18 +35,18 @@ function QLNP() {
 
   const deleteData = async (id) => {
     try {
-      await nguPhapApi.NguPhapHandler(`/${id}`, null, "delete", auth.token);
+      await nguPhapApi.NguPhapHandler(`/${id}`, null, 'delete', auth.token);
       setReloadPage(!reloadPage);
     } catch (error) {
-      console.error("Lỗi khi xóa ngữ pháp: ", error);
+      console.error('Lỗi khi xóa ngữ pháp: ', error);
       setReloadPage(!reloadPage);
     }
   };
   const xacNhanDel = (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa ngữ pháp này không?")) {
+    if (window.confirm('Bạn có chắc chắn muốn xóa ngữ pháp này không?')) {
       deleteData(id);
-      toast.success("Xóa ngữ pháp thành công!", {
-        position: "top-center",
+      toast.success('Xóa ngữ pháp thành công!', {
+        position: 'top-center',
         autoClose: 2000,
       });
     }
@@ -57,9 +57,9 @@ function QLNP() {
       <Link
         to={`/qlnp/chi-tiet-ngu-phap/${nguPhap._id}`}
         className="btn btn-primary btn-sm"
-        style={{ marginRight: "5px" }}
+        style={{ marginRight: '5px' }}
       >
-        <i className="fas fa-folder" style={{ marginRight: "5px" }}></i>
+        <i className="fas fa-folder" style={{ marginRight: '5px' }}></i>
         Xem chi tiết
       </Link>
     );
@@ -89,11 +89,11 @@ function QLNP() {
             <Link
               to={`/qlnp/tao-moi`}
               className="btn btn-warning btn-sm"
-              style={{ marginRight: "5px" }}
+              style={{ marginRight: '5px' }}
             >
               <i
                 className="fas fa-plus-circle"
-                style={{ marginRight: "5px" }}
+                style={{ marginRight: '5px' }}
               ></i>
               Thêm ngữ pháp
             </Link>
@@ -120,12 +120,12 @@ function QLNP() {
             <table className="table table-striped projects">
               <thead>
                 <tr>
-                  <th style={{ width: "1%" }}>STT</th>
-                  <th style={{ width: "50%" }}>Cấu trúc ngữ pháp</th>                 
-                  <th style={{ width: "8%" }} className="text-center">
+                  <th style={{ width: '1%' }}>STT</th>
+                  <th style={{ width: '50%' }}>Cấu trúc ngữ pháp</th>
+                  <th style={{ width: '8%' }} className="text-center">
                     Trạng thái
                   </th>
-                  <th style={{ width: "20%" }}></th>
+                  <th style={{ width: '20%' }}></th>
                 </tr>
               </thead>
               <tbody>
@@ -138,7 +138,7 @@ function QLNP() {
                       <small>
                         Tạo ngày: {new Date(item.createAt).toLocaleDateString()}
                       </small>
-                    </td>                    
+                    </td>
                     <td className="project-state">
                       <span className="badge badge-success">Đang mở</span>
                     </td>
@@ -150,7 +150,7 @@ function QLNP() {
                       >
                         <i
                           className="fas fa-trash"
-                          style={{ marginRight: "5px" }}
+                          style={{ marginRight: '5px' }}
                         ></i>
                         Xóa
                       </a>

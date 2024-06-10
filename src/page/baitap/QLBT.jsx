@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { ToastContainer, toast } from "react-toastify";
-import { Link } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { ToastContainer, toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 
-import baiTapApi from "../Api/baitapApi";
+import baiTapApi from '../../Api/baitapApi';
 
 function QLBT() {
   const auth = useSelector(authSelector);
@@ -16,17 +16,17 @@ function QLBT() {
     const fetchData = async () => {
       try {
         const response = await baiTapApi.BaiTapHandler(
-          "/",
+          '/',
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setBaiTap(responseData);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchData();
@@ -37,9 +37,9 @@ function QLBT() {
       <Link
         to={`/qlbt/chi-tiet-bai-tap/${baitap._id}`}
         className="btn btn-primary btn-sm"
-        style={{ marginRight: "5px" }}
+        style={{ marginRight: '5px' }}
       >
-        <i className="fas fa-folder" style={{ marginRight: "5px" }}></i>
+        <i className="fas fa-folder" style={{ marginRight: '5px' }}></i>
         Xem chi tiết
       </Link>
     );
@@ -47,18 +47,18 @@ function QLBT() {
 
   const deleteData = async (id) => {
     try {
-      await baiTapApi.BaiTapHandler(`/${id}`, null, "delete", auth.token);
+      await baiTapApi.BaiTapHandler(`/${id}`, null, 'delete', auth.token);
       setReloadPage(!reloadPage);
     } catch (error) {
-      console.error("Lỗi khi xóa bài học: ", error);
+      console.error('Lỗi khi xóa bài học: ', error);
       setReloadPage(!reloadPage);
     }
   };
   const xacNhanDel = (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa bài tập này không?")) {
+    if (window.confirm('Bạn có chắc chắn muốn xóa bài tập này không?')) {
       deleteData(id);
-      toast.success("Xóa bài tập thành công!", {
-        position: "top-center",
+      toast.success('Xóa bài tập thành công!', {
+        position: 'top-center',
         autoClose: 2000,
       });
     }
@@ -88,11 +88,11 @@ function QLBT() {
             <Link
               to={`/qlbt/tao-moi`}
               className="btn btn-warning btn-sm"
-              style={{ marginRight: "5px" }}
+              style={{ marginRight: '5px' }}
             >
               <i
                 className="fas fa-plus-circle"
-                style={{ marginRight: "5px" }}
+                style={{ marginRight: '5px' }}
               ></i>
               Thêm bài tập
             </Link>
@@ -125,19 +125,19 @@ function QLBT() {
                   <div className="card bg-light d-flex flex-fill">
                     <div
                       className="d-flex align-items-center"
-                      style={{ marginBottom: "20px" }}
+                      style={{ marginBottom: '20px' }}
                     >
                       <h4
                         className="text-center"
                         style={{
-                          borderRadius: "50%",
-                          width: "40px",
-                          height: "40px",
-                          lineHeight: "40px",
-                          backgroundColor: "lightgreen",
-                          textAlign: "center",
-                          margin: "7px",
-                          boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
+                          borderRadius: '50%',
+                          width: '40px',
+                          height: '40px',
+                          lineHeight: '40px',
+                          backgroundColor: 'lightgreen',
+                          textAlign: 'center',
+                          margin: '7px',
+                          boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.3)',
                         }}
                       >
                         {index + 1}
@@ -150,7 +150,7 @@ function QLBT() {
                     <div className="card-body pt-0">
                       <h2
                         className="lead"
-                        style={{ fontFamily: "Ms Mincho", fontWeight: "bold" }}
+                        style={{ fontFamily: 'Ms Mincho', fontWeight: 'bold' }}
                       >
                         <b>{item.cauHoi}</b>
                       </h2>
@@ -160,7 +160,7 @@ function QLBT() {
                           <span className="fa-li">
                             <i
                               className="fas fa-star"
-                              style={{ color: "#f7ca28" }}
+                              style={{ color: '#f7ca28' }}
                             />
                           </span>
                           <b>Điểm: </b> {item.diem}
@@ -169,7 +169,7 @@ function QLBT() {
                           <span className="fa-li">
                             <i
                               className="fas fa-check-circle"
-                              style={{ color: "#04d119" }}
+                              style={{ color: '#04d119' }}
                             />
                           </span>
                           <b>Đáp án: </b>
@@ -179,7 +179,7 @@ function QLBT() {
                           <span className="fa-li">
                             <i
                               className="fas fa-calendar-alt"
-                              style={{ color: "#04a5d1" }}
+                              style={{ color: '#04a5d1' }}
                             />
                           </span>
                           <b>Tạo ngày: </b>
@@ -196,7 +196,7 @@ function QLBT() {
                         >
                           <i
                             className="fas fa-trash"
-                            style={{ marginRight: "5px" }}
+                            style={{ marginRight: '5px' }}
                           ></i>
                           Xóa
                         </a>

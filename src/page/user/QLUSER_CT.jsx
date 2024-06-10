@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { authSelector } from "../redux/reducers/authReducer";
-import { ToastContainer, toast } from "react-toastify";
-import { Link } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { ToastContainer, toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 
-import userApi from "../Api/userApi";
+import userApi from '../../Api/userApi';
 
 function QLUSER_CT() {
   let { id } = useParams();
@@ -16,17 +16,17 @@ function QLUSER_CT() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
-  const [ngaySinh, setNgaySinh] = useState("");
-  const [photo, setPhoto] = useState("");
-  const [baiHocTiepTheo, setBaiHocTiepTheo] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('');
+  const [ngaySinh, setNgaySinh] = useState('');
+  const [photo, setPhoto] = useState('');
+  const [baiHocTiepTheo, setBaiHocTiepTheo] = useState('');
   const [tienTrinhCuaToi, setTienTrinhCuaToi] = useState([]);
   const [tuVungS, setTuVungS] = useState([]);
   const [nguPhapS, setNguPhapS] = useState([]);
   const [kanjiS, setKanjiS] = useState([]);
-  const roleOptions = ["admin", "user"];
+  const roleOptions = ['admin', 'user'];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,10 +34,10 @@ function QLUSER_CT() {
         const response = await userApi.UserHandler(
           `/${id}`,
           null,
-          "get",
+          'get',
           auth.token
         );
-        if (response.status === "success") {
+        if (response.status === 'success') {
           const responseData = response.data.data;
           setUser(responseData);
           setName(responseData.name);
@@ -52,7 +52,7 @@ function QLUSER_CT() {
           setTuVungS(responseData.tuVungS);
         }
       } catch (error) {
-        console.error("Loi fetch data: ", error);
+        console.error('Loi fetch data: ', error);
       }
     };
     fetchData();
@@ -62,42 +62,42 @@ function QLUSER_CT() {
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("name", name);
-      formData.append("email", email);
-      formData.append("role", role);
-      if (ngaySinh !== "" && validateDateFormat(ngaySinh)) {
-        formData.append("ngaySinh", ngaySinh);
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('role', role);
+      if (ngaySinh !== '' && validateDateFormat(ngaySinh)) {
+        formData.append('ngaySinh', ngaySinh);
       } else {
-        toast.warning("Ngày sinh không đúng vui lòng nhập lại", {
-          position: "top-center",
+        toast.warning('Ngày sinh không đúng vui lòng nhập lại', {
+          position: 'top-center',
           autoClose: 2000,
         });
         setIsLoading(false);
         return;
       }
-      if (typeof photo === "object") {
-        formData.append("image", photo);
+      if (typeof photo === 'object') {
+        formData.append('image', photo);
       } else {
-        formData.append("photo", photo);
+        formData.append('photo', photo);
       }
 
       const response = await userApi.UserHandler(
         `/${id}`,
         formData,
-        "patch",
+        'patch',
         auth.token
       );
       console.log(response);
-      if (response.status === "success") {
-        toast.success("Cập nhật thành công!", {
-          position: "top-center",
+      if (response.status === 'success') {
+        toast.success('Cập nhật thành công!', {
+          position: 'top-center',
           autoClose: 2000,
         });
         setIsUpdating(false);
         setIsLoading(false);
       }
     } catch (error) {
-      console.error("Lỗi khi cập nhật dữ liệu: ", error);
+      console.error('Lỗi khi cập nhật dữ liệu: ', error);
     }
   };
 
@@ -112,23 +112,23 @@ function QLUSER_CT() {
     const DDMMYYYY = /^([0-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/; //check validate có đúng dd/mm/yyy
     return DDMMYYYY.test(dateString); // return về true hoặc false
   };
-  
+
   return (
     <>
       <ToastContainer />
       {isLoading && (
         <div
           style={{
-            position: "fixed",
-            top: "0",
-            left: "0",
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(255, 255, 255, 0.7)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "9999",
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: '9999',
           }}
         >
           <div className="spinner-border text-primary" role="status">
@@ -184,13 +184,13 @@ function QLUSER_CT() {
               {photo && (
                 <img
                   src={
-                    typeof photo === "object"
+                    typeof photo === 'object'
                       ? URL.createObjectURL(photo)
                       : photo
                   }
                   alt="Hình ảnh cách viết"
                   className="img-thumbnail mb-2"
-                  style={{ maxHeight: "200px" }}
+                  style={{ maxHeight: '200px' }}
                 />
               )}
             </div>
@@ -254,19 +254,25 @@ function QLUSER_CT() {
                 value={
                   baiHocTiepTheo
                     ? baiHocTiepTheo.tenBaiHoc
-                    : "User này chưa bắt đầu học"
+                    : 'User này chưa bắt đầu học'
                 }
                 readOnly
               />
             </div>
             <div className="form-group">
               <label htmlFor="inputName">Tiến trình của {name}</label>
-                <textarea className="form-control mb-2" 
-                  readOnly 
-                  rows="5" 
-                  value={tienTrinhCuaToi.length === 0 ? "User này chưa bắt đầu học" : 
-                  tienTrinhCuaToi.map(item => `${item.baiHoc.tenBaiHoc}`).join('\n')}>
-                </textarea>
+              <textarea
+                className="form-control mb-2"
+                readOnly
+                rows="5"
+                value={
+                  tienTrinhCuaToi.length === 0
+                    ? 'User này chưa bắt đầu học'
+                    : tienTrinhCuaToi
+                        .map((item) => `${item.baiHoc.tenBaiHoc}`)
+                        .join('\n')
+                }
+              ></textarea>
             </div>
             {/* <div className="form-group">
               <label htmlFor="inputName">Tiến trình của {name}</label>
@@ -288,37 +294,56 @@ function QLUSER_CT() {
             </div> */}
             <div className="form-group">
               <label htmlFor="inputName">Hán tự đã học</label>
-                <textarea className="form-control mb-2" 
-                  readOnly 
-                  rows="5" 
-                  value={kanjiS.length === 0 ? "User này chưa bắt đầu học" : 
-                  kanjiS.map(item => `${item.hanTu} - ${item.hanViet} -  ${item.viDu}`).join('\n')}>
-                </textarea>
+              <textarea
+                className="form-control mb-2"
+                readOnly
+                rows="5"
+                value={
+                  kanjiS.length === 0
+                    ? 'User này chưa bắt đầu học'
+                    : kanjiS
+                        .map(
+                          (item) =>
+                            `${item.hanTu} - ${item.hanViet} -  ${item.viDu}`
+                        )
+                        .join('\n')
+                }
+              ></textarea>
             </div>
             <div className="form-group">
               <label htmlFor="inputName">Ngữ pháp đã học</label>
-                <textarea className="form-control mb-2" 
-                  readOnly 
-                  rows="5" 
-                  value={nguPhapS.length === 0 ? "User này chưa bắt đầu học" : 
-                  nguPhapS.map(item => `${item.cauTruc}`).join('\n')}>
-                </textarea>
+              <textarea
+                className="form-control mb-2"
+                readOnly
+                rows="5"
+                value={
+                  nguPhapS.length === 0
+                    ? 'User này chưa bắt đầu học'
+                    : nguPhapS.map((item) => `${item.cauTruc}`).join('\n')
+                }
+              ></textarea>
             </div>
             <div className="form-group">
               <label htmlFor="inputName">Từ vựng đã học</label>
-                <textarea className="form-control mb-2" 
-                  readOnly 
-                  rows="5" 
-                  value={tuVungS.length === 0 ? "User này chưa bắt đầu học" : 
-                  tuVungS.map(item => `${item.tu} - ${item.dinhNghia}`).join('\n')}>
-                </textarea>
+              <textarea
+                className="form-control mb-2"
+                readOnly
+                rows="5"
+                value={
+                  tuVungS.length === 0
+                    ? 'User này chưa bắt đầu học'
+                    : tuVungS
+                        .map((item) => `${item.tu} - ${item.dinhNghia}`)
+                        .join('\n')
+                }
+              ></textarea>
             </div>
             {isUpdating && (
               <>
                 <button className="btn btn-primary" onClick={updateData}>
                   <i
                     className="fas fa-upload"
-                    style={{ marginRight: "5px" }}
+                    style={{ marginRight: '5px' }}
                   ></i>
                   Cập nhật
                 </button>
@@ -329,7 +354,7 @@ function QLUSER_CT() {
                 >
                   <i
                     className="fas fa-times"
-                    style={{ marginRight: "5px" }}
+                    style={{ marginRight: '5px' }}
                   ></i>
                   Hủy
                 </button>
